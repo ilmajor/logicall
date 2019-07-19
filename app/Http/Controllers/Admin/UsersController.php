@@ -32,7 +32,6 @@ class UsersController extends Controller
 	}
 	public static function update($id)
 	{
-
 	    $user = User::find($id);
 	    $log = $user->roles()->sync(request()->input('role'));
 		activity()

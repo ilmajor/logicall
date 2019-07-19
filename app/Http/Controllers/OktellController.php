@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Role;
 use App\Profile;
+use App\Project;
 class OktellController extends Controller
 {
 
@@ -83,14 +84,12 @@ class OktellController extends Controller
 
   public function showUser($id)
   {
+    
     $data = User::find($id);
     $trainers = Role::find(2)->users;
-    $projects = DB::connection('sqlsrv_srn')
-      ->table('oktell_settings.dbo.A_TaskManager_Projects')
-      ->orderBy('name','asc')
-      ->get();
+    $projects = Project::orderBy('name')->get();
     $profile = $data->profiles;
-#    dd($profile->Project);
+    $userProjects = $data->projects->pluck('id')->toArray();
     $prefix = DB::connection('sqlsrv_srn')
       ->table('logicall.dbo.users')
       ->leftJoin('oktell.dbo.A_RuleRecords', 'A_RuleRecords.ReactID', '=', 'users.id_user')
@@ -100,22 +99,31 @@ class OktellController extends Controller
       ->where('users.id', '=', $id)
       ->select('users.*', 'Prefix')
       ->first();
-    #dd($profile);
+//dd($userProjects);
     return view('users.show',compact([
       'profile',
       'data',
       'projects',
       'trainers',
-      'prefix'
+      'prefix',
+      'userProjects'
     ]));
   }
 
   public function updateUser($id){
 
     $Profile = Profile::where('user_id', $id)->first();
-    $Profile->update(request()->except(['_method','_token','Project']));
-    $Profile->Project = request()->Project;
+    $Profile->update(request()->except(['_method','_token','project']));
+    //$Profile->Project = request()->Project;
     $Profile->save();
+    $user = User::find($id);
+    //dd($user->projects()->sync(request()->input('project')));
+    $log = $user->projects()->sync(request()->input('project'));
+    activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->withProperties($log)
+        ->log(':causer.name changed sites for :subject.title');
     return redirect()->back();
 
   }

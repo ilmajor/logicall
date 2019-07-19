@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 Use App\Task;
+Use App\User;
 Use App\OktellSetting;
 Use DB;
 
@@ -19,7 +20,10 @@ class AlgorithmSettingsController extends Controller
 
 	public static function index()
 	{
-		$Tasks = Task::orderBy('project')->orderBy('name')->get();
+		//$Tasks = Task::orderBy('project')->orderBy('name')->get();
+		$Tasks = Task::with('project')
+			->get();
+		$Tasks = $Tasks->sortBy('project.name')->sortBy('name');
 		return view('admin.task.index',compact('Tasks'));
 	}
 	public static function show($id)

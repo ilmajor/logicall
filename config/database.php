@@ -69,8 +69,8 @@ return [
 
         'sqlsrv_srn' => [
             'driver'   => 'sqlsrv',
-            'host'     => env('DB_HOST', '10.2.19.153'),
-            'database' => env('DB_DATABASE', 'oktell'),
+            'host'     => '10.2.19.153',
+            'database' => 'logicall_dev',
             'username' => env('DB_USERNAME', 'AutelService'),
             'password' => env('DB_PASSWORD', 'Version2'),
             'port'     => '1433',

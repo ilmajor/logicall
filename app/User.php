@@ -41,7 +41,6 @@ class User extends Authenticatable
 
     public function roles()
     {
-      
       return $this->belongsToMany(Role::class)->withTimestamps();
     }
 
@@ -50,12 +49,10 @@ class User extends Authenticatable
     */
     public function authorizeRoles($roles)
     {
-      if (is_array($roles)) {
-          return $this->hasAnyRole($roles) || 
-              abort(401, 'This action is unauthorized.');
-      }
-      return $this->hasRole($roles) || 
-             abort(401, 'This action is unauthorized.');
+        if ($this->hasAnyRole($roles)) {
+            return true;
+        }
+        abort(401, 'This action is unauthorized.');
     }
     /**
     * Check multiple roles
@@ -63,7 +60,18 @@ class User extends Authenticatable
     */
     public function hasAnyRole($roles)
     {
-      return null !== $this->roles()->whereIn('name', $roles)->get();
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if ($this->hasRole($role)) {
+                    return true;
+                }
+            }
+        } else {
+            if ($this->hasRole($roles)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -72,7 +80,10 @@ class User extends Authenticatable
     */
     public function hasRole($role)
     {
-      return null !== $this->roles()->where('name', $role)->first();
+        if ($this->roles()->where('name', $role)->first()) {
+            return true;
+        }
+        return false;
     }
 
     public function profiles()
@@ -80,8 +91,12 @@ class User extends Authenticatable
       return $this->hasOne(Profile::class);
     }
     
-    public function sections()
+    public function projects()
+    {
+      return $this->belongsToMany(Project::class)->withTimestamps();
+    }
+/*    public function sections()
     {
       return $this->hasMany(Section::class);
-    }
+    }*/
 }

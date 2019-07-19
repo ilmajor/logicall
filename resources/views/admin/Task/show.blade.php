@@ -1,7 +1,7 @@
 @extends ('admin.layouts.master')
 @section('content')
 	
-<h1>Задача {{ $Task->name }} \\ Проект {{ $Task->project }}</h1>
+<h1>Задача {{ $Task->name }} \\ Проект {{ $Task->project->name }}</h1>
 <hr>
 
 <div class="table-responsive">

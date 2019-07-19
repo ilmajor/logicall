@@ -60,13 +60,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="Project">Проект.</label>
-                <select multiple class="form-control form-control" id="Project" name="Project[]" aria-describedby="Project" size='10'required>
+                <label for="project">Проект.</label>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10'required>
                         @foreach($projects as $project)
-                            @if((!empty($profile->Project)) && in_array($project->Name, $profile->Project))
-                                <option selected>{{$project->Name}}</option>
+                            @if((!empty($userProjects)) && in_array($project->id, $userProjects))
+                                <option value="{{$project->id}}" selected>{{$project->name}}</option>
                              @else 
-                                <option>{{$project->Name}}</option>
+                                <option value="{{$project->id}}">{{$project->name}}</option>
                             @endif
                         @endforeach
                 </select>

@@ -21,7 +21,7 @@
 				<label for="url">url</label>
 				<input type="text" class="form-control" id="url" name="url" aria-describedby="url" value="{{ $section->url }}">
 			</div>
-
+{{-- 
 			<div class="form-group">
 			    <label for="exampleFormControlSelect1">Ограничение по проекту</label>
 				<select class="form-control" id="project" name="project">
@@ -32,7 +32,19 @@
 						@endif
 					@endforeach
 				</select>
-			</div>
+			</div> --}}
+            <div class="form-group">
+                <label for="project">Ограничение по проекту.</label>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10'required>
+                        @foreach($projects as $project)
+                            @if((!empty($section->project)) && in_array($project->Name, $section->project))
+                                <option selected>{{$project->Name}}</option>
+                             @else 
+                                <option>{{$project->Name}}</option>
+                            @endif
+                        @endforeach
+                </select>
+            </div>
 
 			<div class="form-group">
 			    <label for="exampleFormControlSelect1">Группа пользователей.</label>

@@ -84,6 +84,7 @@ class SectionController extends Controller
   }
 
   public function update($id){
+    
     $this->validate(request(),[
       'title' => 'required|min:3',
       'description' => 'required',
@@ -92,8 +93,8 @@ class SectionController extends Controller
     ]);
     
     $Section = Section::where('id', $id)->first();
-    $Section->update(request()->except(['_method','_token']));
-    
+    $Section->update(request()->except(['_method','_token','project']));
+    $Section->project = request()->project;
     $Section->save();
     return redirect()->route('sections');
   }

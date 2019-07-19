@@ -20,24 +20,29 @@ class AlgorithmSettingsController extends Controller
 
     public function task()
     {
-      $tasks = Task::WhereIn('project', User::find(Auth::id())->profiles->Project)
-        ->orderBy('project')
-        ->orderBy('name')
-			  ->get();
-		  return view('algorithmSettings.tasks',compact([
-			   'tasks'
-      ])
+
+      $tasks = Task::with('project')
+          ->where(function ($query) {
+            $query->whereIn('project_id',User::find(Auth::id())->projects->pluck('id'))
+                ->orWhereNull('project_id');
+          })
+          ->get();
+      $tasks = $tasks->sortBy('project.name')->sortBy('name');
+      
+      return view('algorithmSettings.tasks',compact([
+    	   'tasks'
+        ])
       );
-   }
+    }
 
    public function index($id)
    {
       $task = Task::find($id);
       
-      $settings = OktellSetting::find($id);
+      $settings = OktellSetting::where('idtask',$task->uuid)->first();
       
       $queue = DB::connection('sqlsrv_srn')
-        ->table("oktell.dbo.udf_go_from_queue_callout_from_dialing ('$task->task_id')")
+        ->table("oktell.dbo.udf_go_from_queue_callout_from_dialing ('$task->uuid')")
         ->first();
 
       $baseData = DB::table($task->task_abonent)
@@ -100,7 +105,6 @@ class AlgorithmSettingsController extends Controller
       $settings = OktellSetting::find($id);
 
       $settings->update(request()->except(['_method','_token']));
-      
       $settings->save();
       
       return redirect()->back();

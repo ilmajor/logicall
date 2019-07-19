@@ -9,7 +9,7 @@
           @foreach ($Tasks as $task )
               <tr>
                 <td>{{ $task->name}}</td>
-                <td>{{ $task->project }}</td>
+                <td>{{ $task->project->name }}</td>
                 <td><a href="/lk/admin/task/{{ $task->id }}" class="btn btn-warning">Редактировать</a></td>
               </tr>
           @endforeach

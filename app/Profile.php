@@ -11,9 +11,11 @@ class Profile extends Model
         'Project' => 'array',
     ];
 
+/*
 	public function getKeyName(){
 	    return "user_id";
 	}
+	*/
 
 	protected $primaryKey = 'user_id';
 

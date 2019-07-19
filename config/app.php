@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://172.27.88.214/lk'),
+    'url' => env('APP_URL', 'http://172.27.68.92/lk'),
 
     /*
     |--------------------------------------------------------------------------
@@ -163,7 +163,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         //MaterializeCSS
-        Skydiver\LaravelMaterializeCSS\MaterializeCSSServiceProvider::class,
+        //Skydiver\LaravelMaterializeCSS\MaterializeCSSServiceProvider::class,
         
 
     ],
@@ -215,7 +215,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         //MaterializeCSS
-        'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
+        //'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
 
     ],
 

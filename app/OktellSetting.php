@@ -19,9 +19,9 @@ class OktellSetting extends Model
         'StartHour',
         'idtask'
     ];
-/*	public function getKeyName(){
+	public function getKeyName(){
 	    return 'idtask';
-	}*/
+	}
     protected $primaryKey = 'id';
 
 	public function show()
