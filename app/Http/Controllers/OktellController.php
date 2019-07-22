@@ -10,18 +10,19 @@ use App\User;
 use App\Role;
 use App\Profile;
 use App\Project;
+use Illuminate\Support\Facades\Auth;
+
 class OktellController extends Controller
 {
 
   public function __construct()
   {
     $this->middleware('auth');
-    $this->middleware('AuthAdmin');
-
+    $this->middleware('AuthManager');
   }
   public function createUser()
   {
-  	return view('users.create');
+    return view('users.create');
   }
 
   public function storeUser()
@@ -46,24 +47,23 @@ class OktellController extends Controller
     ]);
 
     $user
-     ->roles()
-     ->attach(Role::where('name', 'Operator')->first()); 
+      ->roles()
+      ->attach(Role::where('name', 'Operator')->first()); 
 
-    #$profile = New Profile;
     $profile = Profile::create([
       'user_id' => $user->id,
       'FullName' => $user->name,
     ]);
 
     $data = DB::connection('oktell')->select("
-        exec [oktell].[dbo].[usp_create_user] 
-          :name
-          , :login
-          , :idUser
+      exec [oktell].[dbo].[usp_create_user] 
+      :name
+      , :login
+      , :idUser
       ",[
-        'name' => $fio,
-        'login' => $login,
-        'idUser' => $idUser->id
+      'name' => $fio,
+      'login' => $login,
+      'idUser' => $idUser->id
     ]);
 
     return view('users.create',compact([
@@ -74,17 +74,18 @@ class OktellController extends Controller
   public function indexUser()
   {
     $users = User::join('oktell.dbo.A_users', function ($join) {
-            $join->on('users.id_user', '=', 'A_users.id');
-        })
-        ->orderBy('users.name','asc')
-        ->get();
-
+      $join->on('users.id_user', '=', 'A_users.id');
+    })
+    ->orWhereHas('roles', function ($query)  {
+      $query->where('role_user.role_id' ,'<=' , User::find(Auth::id())->roles->max('id'));
+    })
+    ->orderBy('users.name','asc')
+    ->get();
     return view('users.index',compact('users'));
   }
 
   public function showUser($id)
   {
-    
     $data = User::find($id);
     $trainers = Role::find(2)->users;
     $projects = Project::orderBy('name')->get();
@@ -99,7 +100,7 @@ class OktellController extends Controller
       ->where('users.id', '=', $id)
       ->select('users.*', 'Prefix')
       ->first();
-//dd($userProjects);
+
     return view('users.show',compact([
       'profile',
       'data',
@@ -114,18 +115,16 @@ class OktellController extends Controller
 
     $Profile = Profile::where('user_id', $id)->first();
     $Profile->update(request()->except(['_method','_token','project']));
-    //$Profile->Project = request()->Project;
     $Profile->save();
     $user = User::find($id);
-    //dd($user->projects()->sync(request()->input('project')));
     $log = $user->projects()->sync(request()->input('project'));
     activity()
-        ->performedOn($user)
-        ->causedBy(auth()->user())
-        ->withProperties($log)
-        ->log(':causer.name changed sites for :subject.title');
-    return redirect()->back();
+      ->performedOn($user)
+      ->causedBy(auth()->user())
+      ->withProperties($log)
+      ->log(':causer.name changed sites for :subject.title');
 
+    return redirect()->back();
   }
 
 }

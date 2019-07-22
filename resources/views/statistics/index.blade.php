@@ -1,8 +1,77 @@
 @extends ('layouts.master')
 @section('content')
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
- 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Отработанное время за {{date('Y-m-d')}}</h2>
+          <ul class="list-group">
+            <div id = 'timeWorked'></div>
+{{--             @if (empty($timeWorked))
+              <li class="list-group-item">
+                {{ 'Вы сегодня не работали в Oktell.'}}
+              </li>
+            @else 
+              @foreach ($timeWorked as $time )
+                <li class="list-group-item">
+                  {{ $time->Name}}: {{ $time->humanTime}}
+                </li>
+              @endforeach 
+            @endif--}}
+          </ul>
+        </div>
+
+         <div class="col-md-6">
+          <h3>Информация по звонкам</h2>
+          <ul class="list-group">
+            <div id = 'callsInformation'></div>
+            {{-- @if (empty($callsInformation))
+              <li class="list-group-item">
+                {{ 'Нет информации по кодам завершения.'}}
+              </li>
+            @else 
+              @php $name = '' @endphp
+              @foreach ($callsInformation as $call)
+
+                {{ $call->taskName != $name ? $call->taskName : ''}}
+
+                @php $name = $call->taskName @endphp
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ $call->codeName}}
+                  <span class="badge badge-primary badge-pill">
+                  {{ $call->calls}}
+                  </span>
+                </li>
+              @endforeach 
+            @endif --}}
+          </ul>
+        </div>
+
+      </div>
+    </div> 
+    <div class="row">
+        <div class="col-md-6">
+          <h3>Отработанное время за {{date('Y-m-d')}}</h2>
+          <ul class="list-group">
+            <div id="callConsent"></div>
+{{--             @if (empty($callConsent))
+              <li class="list-group-item">
+                {{ 'Вы сегодня не работали в Oktell.'}}
+              </li>
+            @else 
+              @foreach ($callConsent as $consent )
+                <li class="list-group-item">
+                  {{ $consent->userName}}: {{ $consent->codeName}} | {{ $consent->calls}}
+                </li>
+              @endforeach
+            @endif --}}
+          </ul>
+        </div>
+</div>
+
+</div>
  <script>
 
 $(document).ready(function(){
@@ -76,76 +145,4 @@ $(document).ready(function(){
   });
     
  </script>
-
-<meta name="csrf-token" content="{{ csrf_token() }}">
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h3>Отработанное время за {{date('Y-m-d')}}</h2>
-          <ul class="list-group">
-            <div id = 'timeWorked'></div>
-{{--             @if (empty($timeWorked))
-              <li class="list-group-item">
-                {{ 'Вы сегодня не работали в Oktell.'}}
-              </li>
-            @else 
-              @foreach ($timeWorked as $time )
-                <li class="list-group-item">
-                  {{ $time->Name}}: {{ $time->humanTime}}
-                </li>
-              @endforeach 
-            @endif--}}
-          </ul>
-        </div>
-
-         <div class="col-md-6">
-          <h3>Информация по звонкам</h2>
-          <ul class="list-group">
-            <div id = 'callsInformation'></div>
-            {{-- @if (empty($callsInformation))
-              <li class="list-group-item">
-                {{ 'Нет информации по кодам завершения.'}}
-              </li>
-            @else 
-              @php $name = '' @endphp
-              @foreach ($callsInformation as $call)
-
-                {{ $call->taskName != $name ? $call->taskName : ''}}
-
-                @php $name = $call->taskName @endphp
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  {{ $call->codeName}}
-                  <span class="badge badge-primary badge-pill">
-                  {{ $call->calls}}
-                  </span>
-                </li>
-              @endforeach 
-            @endif --}}
-          </ul>
-        </div>
-
-      </div>
-    </div> 
-    <div class="row">
-        <div class="col-md-6">
-          <h3>Отработанное время за {{date('Y-m-d')}}</h2>
-          <ul class="list-group">
-            <div id="callConsent"></div>
-{{--             @if (empty($callConsent))
-              <li class="list-group-item">
-                {{ 'Вы сегодня не работали в Oktell.'}}
-              </li>
-            @else 
-              @foreach ($callConsent as $consent )
-                <li class="list-group-item">
-                  {{ $consent->userName}}: {{ $consent->codeName}} | {{ $consent->calls}}
-                </li>
-              @endforeach
-            @endif --}}
-          </ul>
-        </div>
-</div>
-
-</div>
 @endsection
