@@ -14,7 +14,7 @@ class UsersController extends Controller
   public function __construct()
   {
     $this->middleware('auth');
-    $this->middleware('AuthManager' , ['except' => 'show']);
+    //$this->middleware('AuthManager' , ['except' => 'show']);
 
   }
   
@@ -23,7 +23,7 @@ class UsersController extends Controller
 
     $id = Auth::user()->id;
 
-    $login = DB::connection('sqlsrv_srn')->select("
+/*    $login = DB::connection('sqlsrv_srn')->select("
     select 
         UserName as UserName
         ,CONVERT(VARCHAR(32), HashBytes('MD5', [password]), 2) as [pswd]
@@ -72,8 +72,29 @@ class UsersController extends Controller
       $result['admin'] = $key->admin;
       $result['number'] = $key->number;
       $result['operatorStatus'] = $key->operatorStatus;
-    };
-    return view('users.info',compact('result'));
+    };*/
+    $user = User::find($id);
+    $profile = $user->profiles;
+    $roles = $user->roles->pluck('name','name');
+    $projects = $user->projects->pluck('name','name');;
+    $prefix = DB::connection('sqlsrv_srn')
+      ->table('logicall.dbo.users')
+      ->leftJoin('oktell.dbo.A_RuleRecords', 'A_RuleRecords.ReactID', '=', 'users.id_user')
+      ->leftJoin('oktell.dbo.A_Rules', 'A_Rules.ID', '=', 'A_RuleRecords.RuleID')
+      ->leftJoin('oktell.dbo.A_NumberPlanAction', 'A_NumberPlanAction.ExtraID', '=', 'A_Rules.ID')
+      ->leftJoin('oktell.dbo.A_NumberPlan', 'A_NumberPlan.ID', '=', 'A_NumberPlanAction.NumID')
+      ->where('users.id', '=', $id)
+      ->select('users.*', 'Prefix')
+      ->first();
+
+    //dd($profile->DateofBirth);
+    return view('users.info',compact([
+      'user',
+      'profile',
+      'roles',
+      'prefix',
+      'projects',
+    ]));
 
   }
 
