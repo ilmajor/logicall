@@ -8,7 +8,7 @@ class Section extends Model
 
 	public function role()
 	{
-		return $this->belongsTo(Role::class);
+		return $this->belongsToMany(Role::class)->withTimestamps();
 	}
 
 

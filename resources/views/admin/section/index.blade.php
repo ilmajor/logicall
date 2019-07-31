@@ -7,8 +7,8 @@
         <tbody>
           @foreach ($sections as $section )
               <tr>
-                <td>{{ $section->title}}</td>
-                <td>{{ $section->role->name }}</td>
+                <td>{{ $section->title !== null ? $section->title : ''}}</td>
+                <td>{{ !empty($section->role->first()->name) ? $section->role->pluck('name')->implode(' | ') : '' }}</td>
                 <td><a href="/lk/admin/section/{{ $section->id }}" class="btn btn-warning">Редактировать</a></td>
                 <td>
                   <form method="POST" action="/lk/admin/section/{{ $section->id }}">

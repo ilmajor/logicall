@@ -15,7 +15,7 @@ class AuthManagerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $request->user()->authorizeRoles(['manager']);
+        $request->user()->authorizeRoles(['manager','supervisor']);
         return $next($request);
     }
 }

@@ -73,23 +73,32 @@ class OktellController extends Controller
 
   public function indexUser()
   {
+    $data = Role::where('weight','>',User::find(Auth::id())->roles->max('weight'))
+      ->with('users')
+      ->first();
+    
     $users = User::join('oktell.dbo.A_users', function ($join) {
-      $join->on('users.id_user', '=', 'A_users.id');
-    })
-    ->orWhereHas('roles', function ($query)  {
-      $query->where('role_user.role_id' ,'<=' , User::find(Auth::id())->roles->max('id'));
-    })
-    ->orderBy('users.name','asc')
-    ->get();
+        $join->on('users.id_user', '=', 'A_users.id');
+      })
+      ->orWhereHas('roles', function ($query) use($data)  {
+        $query->where('roles.weight' ,'<=' , User::find(Auth::id())->roles->max('weight'))
+        ->whereNotIn(
+            'role_user.user_id'
+            ,$data !== null ? $data->users->pluck('id') : [0]
+          );
+      })
+      ->orderBy('users.name','asc')
+      ->get();
     return view('users.index',compact('users'));
   }
 
   public function showUser($id)
   {
     $data = User::find($id);
-    $trainers = Role::find(2)->users;
+    $roleWeight = $data->roles->max('weight');
+    $managers = Role::find(2)->users;
     $projects = Project::orderBy('name')->get();
-    $profile = $data->profiles;
+    $profile = Profile::where('user_id',$id)->first();
     $userProjects = $data->projects->pluck('id')->toArray();
     $prefix = DB::connection('sqlsrv_srn')
       ->table('logicall.dbo.users')
@@ -100,14 +109,16 @@ class OktellController extends Controller
       ->where('users.id', '=', $id)
       ->select('users.*', 'Prefix')
       ->first();
-
+    $userRoleWeight = User::find(Auth::id())->roles->max('weight');
     return view('users.show',compact([
       'profile',
       'data',
       'projects',
-      'trainers',
+      'managers',
       'prefix',
-      'userProjects'
+      'userProjects',
+      'roleWeight',
+      'userRoleWeight'
     ]));
   }
 
@@ -117,6 +128,7 @@ class OktellController extends Controller
     $Profile->update(request()->except(['_method','_token','project']));
     $Profile->save();
     $user = User::find($id);
+    
     $log = $user->projects()->sync(request()->input('project'));
     activity()
       ->performedOn($user)

@@ -8,6 +8,8 @@ use Carbon\Carbon;
 Use Illuminate\Support\Facades\Auth;
 use App\Section;
 use App\Role;
+use App\Project;
+use App\User;
 
 class SectionController extends Controller
 {
@@ -21,6 +23,7 @@ class SectionController extends Controller
   {
 
     $sections = Section::with('role')->get();
+    
     return view('admin.section.index',compact([
       'sections'
     ]));
@@ -30,12 +33,10 @@ class SectionController extends Controller
   {
     $roles = Role::get();
 
-    $projects = DB::connection('sqlsrv_srn')
-      ->table('oktell_settings.dbo.A_TaskManager_Projects')
-      ->orderBy('name','asc')
-      ->get();
+    $projects = Project::orderBy('name')->get();
 
     $section = Section::with('role')
+      ->with('projects')
       ->where('id', $id)
       ->first();
     
@@ -89,13 +90,42 @@ class SectionController extends Controller
       'title' => 'required|min:3',
       'description' => 'required',
       'url' => 'required|min:3',
-      'role_id' => 'required'
+      //'role' => 'required'
     ]);
+    //dd(request()->input('role'));
+    $Section = Section::find($id);
+    $Section->update(request()->except(['_method','_token','project','role']));
     
-    $Section = Section::where('id', $id)->first();
-    $Section->update(request()->except(['_method','_token','project']));
-    $Section->project = request()->project;
-    $Section->save();
+    //dd(request()->input('role'));
+    $Section->role()->sync(request()->input('role'));
+
+    $Section->projects()->sync(request()->input('project'));
+    //$Section->save();
+/*    if (empty(request()->input('role'))) {
+        $logRole = $Section->role()->detach();
+    } else {
+        $logRole = $Section->role()->sync(request()->input('role'));
+    }
+    if (empty(request()->input('project'))) {
+        $logProjects = $Section->projects()->detach();
+    } else {
+        $logProjects = $Section->projects()->sync(request()->input('project'));
+    }*/
+
+    
+
+/*    activity()
+        ->performedOn($Section)
+        ->causedBy(auth()->user())
+        ->withProperties($logProjects)
+        ->log(':causer.name changed sites for :subject.title');*/
+
+/*    activity()
+        ->performedOn($Section)
+        ->causedBy(auth()->user())
+        ->withProperties($logRole)
+        ->log(':causer.name changed sites for :subject.title');*/
+
     return redirect()->route('sections');
   }
   

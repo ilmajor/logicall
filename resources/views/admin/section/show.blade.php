@@ -13,7 +13,8 @@
 				<label for="title">Название блока.</label>
 				<input type="text" class="form-control" id="title" name="title" aria-describedby="title" value="{{ $section->title }}">
 			</div>
-			<div class="form-group">
+
+ 		<div class="form-group">
 				<label for="description">Описание.</label>
 				<input type="text" class="form-control" id="description" name="description" aria-describedby="description" value="{{ $section->description }}">
 			</div>
@@ -21,26 +22,17 @@
 				<label for="url">url</label>
 				<input type="text" class="form-control" id="url" name="url" aria-describedby="url" value="{{ $section->url }}">
 			</div>
-{{-- 
-			<div class="form-group">
-			    <label for="exampleFormControlSelect1">Ограничение по проекту</label>
-				<select class="form-control" id="project" name="project">
-					<option value='{{ $section->project }}'>{{ $section->project }}</option>
-					@foreach($projects as $project)
-						@if($section->project != $project->Name)
-							<option value='{{ $project->Name }}'>{{ $project->Name }}</option>
-						@endif
-					@endforeach
-				</select>
-			</div> --}}
+ 
             <div class="form-group">
                 <label for="project">Ограничение по проекту.</label>
-                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10'required>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10'>
+                	<option value=''></option>
                         @foreach($projects as $project)
-                            @if((!empty($section->project)) && in_array($project->Name, $section->project))
-                                <option selected>{{$project->Name}}</option>
+                            @if((!empty($section->id)) && in_array($project->id, $section->projects->pluck('id')->toArray()))
+
+                                <option value='{{ $project->id }}' selected>{{$project->name}}</option>
                              @else 
-                                <option>{{$project->Name}}</option>
+                                <option value='{{ $project->id }}'>{{$project->name}}</option>
                             @endif
                         @endforeach
                 </select>
@@ -48,13 +40,23 @@
 
 			<div class="form-group">
 			    <label for="exampleFormControlSelect1">Группа пользователей.</label>
-				<select class="form-control" id="role_id" name="role_id">
-					<option value='{{ $section->role->id }}'>{{ $section->role->name }}</option>
+				<select multiple class="form-control form-control" id="role" name="role[]">
+					<option value=''></option>
+{{-- 					<option value='{{ $section->role->first()->id }}'>{{ $section->role->first()->name }}</option>
 					@foreach($roles as $role)
-						@if($section->role->id != $role->id)
+						@if($section->role->first()->id != $role->id)
 							<option value='{{ $role->id }}'>{{ $role->name }}</option>
 						@endif
-					@endforeach
+					@endforeach --}}
+
+
+                     @foreach($roles as $role)
+                        @if((!empty($role->id)) && in_array($role->id, $section->role->pluck('id')->toArray()))
+                            <option value='{{ $role->id }}' selected>{{$role->name}}</option>
+                         @else 
+                            <option value='{{ $role->id }}'>{{$role->name}}</option>
+                        @endif
+                    @endforeach 
 				</select>
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>

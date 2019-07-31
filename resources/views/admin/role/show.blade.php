@@ -16,6 +16,12 @@
 				<label for="description">Описание.</label>
 				<input type="text" class="form-control" id="description" name="description" aria-describedby="description" value="{{ $role->description }}">
 			</div>
+
+			<div class="form-group">
+				<label for="weight">Описание.</label>
+				<input type="text" class="form-control" id="weight" name="weight" aria-describedby="weight" value="{{ $role->weight }}">
+			</div>
+			
 		</div>
 		<button type="submit" class="btn btn-primary">Сохранить</button>
 	</form>	

@@ -17,18 +17,18 @@
 
             <div class="form-group">
                 <label for="FullName">Фамилия Имя Отчество.</label>
-                <input type="text" class="form-control" id="FullName" name="FullName" aria-describedby="FullName" value="{{ $profile->FullName }}" required>
+                <input type="text" class="form-control" id="FullName" name="FullName" aria-describedby="FullName" value="{{ $profile->FullName }}">
             </div>
             <div class="form-group">
 
                 <label for="Rate" >Ставка.</label>
-                <input type="text" class="form-control" name="Rate" id="Rate" max="1" value="{{ $profile->Rate }}" onchange="rangeRate.value = Rate.value" / required>
+                <input type="text" class="form-control" name="Rate" id="Rate" max="1" value="{{ $profile->Rate }}" onchange="rangeRate.value = Rate.value" / >
                 <input type="range" oninput="Rate.value = rangeRate.value" class="form-control-range slider" type="range" min="0.3" max="1" value="{{ $profile->Rate }}" id="rangeRate" step="0.01" onchange="Rate.value = rangeRate.value" >
                 {{-- <input type="range" class="form-control-range" id="Rate"  min="0.3" max="1" step="0.1" name="Rate" value=""> --}}
             </div>
             <div class="form-group">
                 <label for="Schedule">График 2/2 или 5/2.</label>
-                <select class="form-control form-control" id="Schedule" name="Schedule" aria-describedby="Schedule" required>
+                <select class="form-control form-control" id="Schedule" name="Schedule" aria-describedby="Schedule" >
                     <option>{{ $profile->Schedule }}</option>
                     <option>5/2</option>
                     <option>2/2</option>
@@ -39,7 +39,7 @@
                 <label for="EmploymentDate">Дата трудоустройства.</label>
                 <input type="date" class="form-control" id="EmploymentDate" name="EmploymentDate" aria-describedby="EmploymentDate" value="{{ 
                     date("Y-m-d", strtotime($profile->EmploymentDate))
-                }}"required>
+                }}">
             </div>
             <div class="form-group">
                 <label for="DateDismissal">Дата увольнения.</label>
@@ -50,18 +50,25 @@
                 >
             </div>
             <div class="form-group">
-                <label for="City">Прощадка.</label>
-                <select class="form-control form-control" id="City" name="City" aria-describedby="City" required>
+                <label for="City">Площадка.</label>
+                <select class="form-control form-control" id="City" name="City" aria-describedby="City">
                     <option>{{ $profile->City }}</option>
                     <option>Саранск</option>
                     <option>Красноярск</option>
                     <option>Москва</option>
                     <option>Самара</option>
+                    <option></option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="project">Проект.</label>
-                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10'required>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10' 
+                @if($roleWeight > $userRoleWeight )
+                    disabled>
+                @else
+                    required>
+                @endif
+                    <option></option>
                         @foreach($projects as $project)
                             @if((!empty($userProjects)) && in_array($project->id, $userProjects))
                                 <option value="{{$project->id}}" selected>{{$project->name}}</option>
@@ -73,35 +80,37 @@
             </div>
             <div class="form-group">
                 <label for="Position">Должность.</label>
-                <select class="form-control form-control" id="Position" name="Position" aria-describedby="Position" required>
+                <select class="form-control form-control" id="Position" name="Position" aria-describedby="Position" >
                     <option>{{ $profile->Position }}</option>
+                    <option></option>
                     <option>Оператор 1 категории</option>
+
                     <option>Оператор 2 категории</option>
                     <option>Оператор 3 категории</option>
                 </select>
                 
             </div>
-            <div class="form-group">
+{{--             <div class="form-group">
                 <label for="LastJumpDate">Дата последнего перехода.</label>
                 <input type="date" class="form-control" id="LastJumpDate" name="LastJumpDate" aria-describedby="LastJumpDate" value="{{ 
                     date("Y-m-d", strtotime($profile->LastJumpDate))
                 }}" required>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <label for="PinnedCoach">Закрепленный коуч.</label>
-                <select class="form-control form-control" id="PinnedCoach" name="PinnedCoach" aria-describedby="PinnedCoach" required>
+                <select class="form-control form-control" id="PinnedCoach" name="PinnedCoach" aria-describedby="PinnedCoach" >
                     <option>{{ $profile->PinnedCoach }}</option>
-                    @foreach($trainers as $trainer)
-                        <option>{{$trainer->name}}</option>
+                    @foreach($managers as $manager)
+                        <option>{{$manager->name}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="OSCoach">Коуч по ОС.</label>
-                <select class="form-control form-control" id="OSCoach" name="OSCoach" aria-describedby="OSCoach" required>
+                <select class="form-control form-control" id="OSCoach" name="OSCoach" aria-describedby="OSCoach" >
                     <option>{{ $profile->OSCoach }}</option>
-                    @foreach($trainers as $trainer)
-                        <option>{{$trainer->name}}</option>
+                    @foreach($managers as $manager)
+                        <option>{{$manager->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -117,10 +126,10 @@
             </div> --}}
             <div class="form-group">
                 <label for="TeamLeader">Руководитель группы.</label>
-                <select class="form-control form-control" id="TeamLeader" name="TeamLeader" aria-describedby="TeamLeader" required>
+                <select class="form-control form-control" id="TeamLeader" name="TeamLeader" aria-describedby="TeamLeader" >
                     <option>{{ $profile->TeamLeader }}</option>
-                    @foreach($trainers as $trainer)
-                        <option>{{$trainer->name}}</option>
+                    @foreach($managers as $manager)
+                        <option>{{$manager->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -133,7 +142,7 @@
                 <input type="date" class="form-control" id="DateofBirth" name="DateofBirth" aria-describedby="DateofBirth"  value="{{ 
                     
                     date("Y-m-d", strtotime($profile->DateofBirth) )
-                }}"required>
+                }}">
             </div>
 {{--            <div class="form-group">
                 <label for="Age">возраст.</label>
@@ -159,7 +168,7 @@
             </div> --}}
             <div class="form-group">
                 <label for="MobilePhone">Мобильный телефон.</label>
-                <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" aria-describedby="MobilePhone" value="{{ $profile->MobilePhone }}"required>
+                <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" aria-describedby="MobilePhone" value="{{ $profile->MobilePhone }}">
             </div>
 
 

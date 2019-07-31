@@ -10,6 +10,7 @@
               <tr>
                 <td>{{ $role->name}}</td>
                 <td>{{ $role->description }}</td>
+                <td>{{ $role->weight }}</td>
                 <td><a href="/lk/admin/role/{{ $role->id }}" class="btn btn-warning">Редактировать</a></td>
                 <td>
                   <form method="POST" action="/lk/admin/role/{{ $role->id }}">

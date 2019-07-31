@@ -40,11 +40,13 @@ class RolesController extends Controller
 		$this->validate(request(),[
 		  'name' => 'required|min:3',
 		  'description' => 'required',
+		  'weight' => 'required',
 		]);
-
+		
 		Role::create([
 		  'name' => request('name'),
 		  'description' => request('description'),
+		  'weight' => request('weight'),
 		]);
 		return redirect()->back();
 	}

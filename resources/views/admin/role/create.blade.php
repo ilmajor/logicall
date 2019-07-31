@@ -20,6 +20,11 @@
 		</div>
 
 		<div class="form-group">
+			<label for="weight">"Вес"</label>
+			<input type="text" class="form-control" id="weight" name="weight" required>
+		</div>
+
+		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Создать</button>
 		</div>
 

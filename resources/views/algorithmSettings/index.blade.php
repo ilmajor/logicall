@@ -3,16 +3,16 @@
 	<h1>Задача {{$task->name}}</h1>
 	<div class="container">
 		<div class="row">
-			<h6>
+			<h5>
 				Размер базы:  
 				<span class="badge badge-secondary" id="" data-toggle="tooltip" data-placement="top" title="кол-во контактов, загруженных в работу.">{{$baseData->base}}</span>
-			</h6>
-			<h6>
+			</h5>
+			<h5>
 				 | Доступно для обзвона сейчас:  
 				<span class="badge badge-secondary" id="" data-toggle="tooltip" data-placement="top" title="кол-во контактов, которые доступны для обзвона в настоящий момент, данное значение меняется исходя из кол-ва выставленных попыток и по мере обработки базы операторами.">{{$baseData->selection}}</span>
-			</h6>
-			<h6> | % потеряных в очереди:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «клиент прервавший ожидание в очереди» / «общее количество клиентов с которым происходила коммутация">{{round($queue->go_from_queue_percent,2)}}</span></h6>
-			<h6> | % Отбоя из дозванивающихся:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «Отбоя из дозвонившихся» / «общее количество клиентов с которым происходила коммутация». Если в поле «кол-во звонков на оператора» указано 2, то система набирает 2 вызова, первого ответившего клиента отправляет на оператора, второго сбрасывает. Нужно следить за этим значением и регулировать настройки если данное значение растет.">{{round($queue->callout_from_dialing_percent,2)}}</span></h6>
+			</h5>
+			<h5> | % потеряных в очереди:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «клиент прервавший ожидание в очереди» / «общее количество клиентов с которым происходила коммутация">{{round($queue->go_from_queue_percent,2)}}</span></h5>
+			<h5> | % Отбоя из дозванивающихся:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «Отбоя из дозвонившихся» / «общее количество клиентов с которым происходила коммутация». Если в поле «кол-во звонков на оператора» указано 2, то система набирает 2 вызова, первого ответившего клиента отправляет на оператора, второго сбрасывает. Нужно следить за этим значением и регулировать настройки если данное значение растет.">{{round($queue->callout_from_dialing_percent,2)}}</span></h5>
 
 		</div>
 	</div>
