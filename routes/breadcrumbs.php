@@ -40,6 +40,12 @@ Breadcrumbs::for('userCreate', function ($trail) {
     $trail->push('Создать пользователя Oktell', route('userCreate'));
 });
 
+// Home > userStore
+Breadcrumbs::for('userStore', function ($trail) {
+    $trail->parent('home');
+    $trail->push('userStore', route('userStore'));
+});
+
 // Home > algorithmSettings
 Breadcrumbs::for('algorithmSettings', function ($trail) {
     $trail->parent('home');

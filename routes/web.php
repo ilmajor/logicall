@@ -26,11 +26,12 @@ Route::get('/statistics','StatisticsController@show')->name('statistics');
 Route::post('/statistics','StatisticsController@send');
 
 Route::get('/users/create','OktellController@createUser')->name('userCreate');
-Route::post('/users/create','OktellController@storeUser');
+Route::post('/users/create','OktellController@storeUser')->name('userStore');
 
 Route::get('/users','OktellController@indexUser')->name('users');
 Route::get('/users/{id}','OktellController@showUser')->name('user');
-Route::post('/users/{id}','OktellController@updateUser');
+Route::post('/users/{id}','OktellController@updateUser')->name('userUpdate');
+
 #algorithmSettings
 Route::get('/algorithmSettings','AlgorithmSettingsController@task')->name('algorithmSettings');
 Route::get('/algorithmSettings/{id}','AlgorithmSettingsController@index')->name('algorithmSetting');
