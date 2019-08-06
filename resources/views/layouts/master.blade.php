@@ -24,13 +24,14 @@
   <body>
 
     <header>
-		@include('layouts.nav')
+		  @include('layouts.nav')
     </header>
 
     <main role="main">
 
       <div class="container">
-      	
+        {{ Breadcrumbs::render() }}
+
       	@yield('content')
 
       </div>

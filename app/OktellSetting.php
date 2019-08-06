@@ -19,13 +19,13 @@ class OktellSetting extends Model
         'StartHour',
         'idtask'
     ];
-	public function getKeyName(){
+/*	public function getKeyName(){
 	    return 'idtask';
-	}
+	}*/
     protected $primaryKey = 'id';
 
 	public function show()
 	{
-		return $this->hasOne(Task::class,'task_id','idtask');
+		return $this->hasOne(Task::class,'uuid','idtask');
 	}
 }

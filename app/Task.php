@@ -5,10 +5,10 @@ namespace App;
 
 class Task extends Model
 {
-/*    public function settings()
+    public function settings()
     {
-    	return $this->hasOne(OktellSetting::class,'idtask','task_id');
-    }*/
+    	return $this->hasOne(OktellSetting::class,'idtask','uuid');
+    }
     public function project()
     {
     	return $this->belongsTo(Project::class)->orderBy('name');

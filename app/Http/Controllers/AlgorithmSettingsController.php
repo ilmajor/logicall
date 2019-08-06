@@ -54,8 +54,6 @@ class AlgorithmSettingsController extends Controller
           else {
             $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent');
           }
-
-            
         })
         ->where($task->task_abonent.'.in_work', '=', 'NO')
         ->whereNotIn($task->task_abonent.'.status',[50])
@@ -71,16 +69,20 @@ class AlgorithmSettingsController extends Controller
         })
         ->where(function($query) use($task){
           $query->whereNull($task->task_abonent.'.TIMEDIFF')
-            ->orWhereBetween(DB::raw('TIMEDIFF + datepart(hh,getdate())'),[9,20]);
+            ->orWhereBetween(
+              DB::raw('TIMEDIFF + datepart(hh,getdate())')
+              ,[$task->min_client_time_calls,$task->max_client_time_calls]
+            );
         })
         ->where(function($query) use($task){
           if($task->is_taskid == 1){
-            $query->where($task->task_abonent.'.TaskId','=',$task->task_id);
+            $query->where($task->task_abonent.'.TaskId','=',$task->uuid);
           }
             
         })
         ->selectRaw('count(*) as selection,( select count(*) as cc  from '.$task->task_table.') as base')
         ->first();
+
       return view('algorithmSettings.index',compact([
          'task',
          'baseData',
@@ -91,6 +93,7 @@ class AlgorithmSettingsController extends Controller
    }
    public function update($id)
    {
+
       $this->validate(request(),[
         'waitcall_min' => 'required',
         'waitcall_max' => 'required',
@@ -102,10 +105,10 @@ class AlgorithmSettingsController extends Controller
         'StartHour' => 'required' 
       ]);
 
-      $settings = OktellSetting::find($id);
+      $task = Task::find($id)->settings;
 
-      $settings->update(request()->except(['_method','_token']));
-      $settings->save();
+      $task->update(request()->except(['_method','_token']));
+      $task->save();
       
       return redirect()->back();
    }

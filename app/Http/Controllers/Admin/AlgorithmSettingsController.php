@@ -56,6 +56,8 @@ class AlgorithmSettingsController extends Controller
 			'task_table' => 'required',
 			'task_abonent' => 'required',
 			'task_phone' => 'required',
+			'min_client_time_calls' => 'required',
+			'max_client_time_calls' => 'required',
 
 	        'waitcall_min' => 'required',
 	        'waitcall_max' => 'required',
@@ -83,6 +85,8 @@ class AlgorithmSettingsController extends Controller
 			'user_id' => Auth::id(),
 			'is_taskid' => !empty(request('is_taskid')) ? "true" : "false",
 			'name' => $OktellTasks->Name,
+			'min_client_time_calls' => request('min_client_time_calls'),
+			'max_client_time_calls' => request('max_client_time_calls'),
 		]);
 
 		OktellSetting::create([
