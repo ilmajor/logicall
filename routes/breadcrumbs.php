@@ -1,5 +1,16 @@
 <?php
 
+// login
+Breadcrumbs::for('login', function ($trail) {
+    $trail->push('login', route('login'));
+});
+
+// logout
+Breadcrumbs::for('logout', function ($trail) {
+    $trail->push('logout', route('logout'));
+});
+
+
 // Home
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Главная', route('home'));
