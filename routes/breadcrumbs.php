@@ -28,6 +28,19 @@ Breadcrumbs::for('projectSberbankIndividualsController', function ($trail) {
     $trail->push('Претензии по Follow-Up', route('projectSberbankIndividualsController'));
 });
 
+// Home > tecos
+Breadcrumbs::for('tecos', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Тэкос', route('tecos'));
+});
+
+// Home > algorithmSettings > [algorithmSetting]
+Breadcrumbs::for('tecosShow', function ($trail, $id) {
+    $Task = App\Task::findOrFail($id);
+    $trail->parent('tecos');
+    $trail->push($Task->name, route('tecosShow', $Task->id));
+});
+
 // Home > statistics
 Breadcrumbs::for('statistics', function ($trail) {
     $trail->parent('home');

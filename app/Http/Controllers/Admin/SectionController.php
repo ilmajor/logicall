@@ -49,10 +49,7 @@ class SectionController extends Controller
 
   public function create()
   {
-    $projects = DB::connection('sqlsrv_srn')
-      ->table('oktell_settings.dbo.A_TaskManager_Projects')
-      ->orderBy('name','asc')
-      ->get();
+    $projects = Project::orderBy('name')->get();
 
     $roles = Role::get();
 
@@ -68,19 +65,21 @@ class SectionController extends Controller
       'title' => 'required|min:3',
       'description' => 'required',
       'url' => 'required|min:3',
-      'role_id' => 'required',
-      //'project' => 'required',
+      'role' => 'required',
+
     ]);
 
-    Section::create([
+    $section = Section::create([
       'title' => request('title'),
       'description' => request('description'),
       'user_id' => Auth::user()->id,
       'url' => request('url'),
-      'role_id' => request('role_id'),
-      'project' => request('project'),
     ]);
 
+    $section->role()->sync(request()->input('role'));
+    $section->projects()->sync(request()->input('project'));
+
+    $section->save();
     return redirect()->back();
   }
 

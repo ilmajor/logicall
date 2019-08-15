@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use DB;
 use Carbon\Carbon;
-use App\SberbankIndividualsRequireFU;
+use App\project\sberbankIndividuals\SberbankIndividualsRequireFU;
+
 
 class SberbankIndividualsController extends Controller
 {
@@ -31,7 +32,7 @@ class SberbankIndividualsController extends Controller
 			'validity' => 'required',
 			'appStatus' => 'required',
 			'comment' => 'required',
-			'addressVsp' => 'required'
+			'addressVsp' => 'required',
 		]);
 
 		$data = SberbankIndividualsRequireFU::create([

@@ -16,6 +16,15 @@ Route::get('/user','UsersController@show')->name('userId');
 Route::get('/project/sberbankIndividualsController','Project\SberbankIndividualsController@index')
 	->name('projectSberbankIndividualsController');
 Route::post('/project/sberbankIndividualsController','Project\SberbankIndividualsController@store');
+#tecos
+Route::get('/project/tecos','Project\sberbankLE\TecosController@index')->name('tecos');
+Route::get('/project/tecos/{id}','Project\sberbankLE\TecosController@show')->name('tecosShow');
+Route::get('/project/tecos/start/{id}/{id_campaign}','Project\sberbankLE\TecosController@start')->name('tecosStart');
+Route::get('/project/tecos/stopTemporarily/{id}/{id_campaign}','Project\sberbankLE\TecosController@stopTemporarily')
+	->name('tecosStopTemporarily');
+Route::get('/project/tecos/stopForever/{id}/{id_campaign}','Project\sberbankLE\TecosController@stopForever')
+	->name('tecosStopForever');
+//Route::post('/project/sberbankLE/Tecos','Project\sberbankLE\Tecos@store');
 
 Route::get('/login', 'SessionsController@create')->name('login');
 Route::post('/login', 'SessionsController@store');
@@ -63,6 +72,15 @@ Route::post('/admin/task/create','Admin\AlgorithmSettingsController@store');
 Route::get('/admin/task','Admin\AlgorithmSettingsController@index')->name('admnTasks');
 Route::get('admin/task/{id}','Admin\AlgorithmSettingsController@show')->name('admnTask');
 Route::post('/admin/task/{id}','Admin\AlgorithmSettingsController@update');
+#project
+#SberBank LE
+Route::get('/admin/project/sberbank/tecos/create','Admin\project\sberbankLE\TecosController@create')
+	->name('adminProjectSberbankTecosCreate');
+Route::post('/admin/project/sberbank/tecos/create','Admin\project\sberbankLE\TecosController@store');
+Route::get('/admin/project/sberbank/tecos','Admin\project\sberbankLE\TecosController@index');
+Route::get('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@show');
+Route::post('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@update');
+Route::delete('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@destroy');
 
 
 
