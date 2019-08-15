@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 Use App\Task;
+use App\Project;
 Use App\User;
 Use App\OktellSetting;
 Use DB;
@@ -45,7 +46,7 @@ class AlgorithmSettingsController extends Controller
 	public function create()
 	{
  		$OktellTasks = DB::table('oktell_settings.dbo.A_TaskManager_Tasks')
- 			->whereNotIn('id',Task::select('task_id')->get())
+ 			->whereNotIn('id',Task::select('uuid')->get())
  			->orderBy('Name')
  			->get();
 		return view('admin.task.create',compact('OktellTasks'));
@@ -54,7 +55,7 @@ class AlgorithmSettingsController extends Controller
 		$this->validate(request(),[
 			'task_id' => 'required',
 			'task_table' => 'required',
-			'task_abonent' => 'required',
+/*			'task_abonent' => 'required',
 			'task_phone' => 'required',
 			'min_client_time_calls' => 'required',
 			'max_client_time_calls' => 'required',
@@ -66,40 +67,46 @@ class AlgorithmSettingsController extends Controller
 	        'startcount' => 'required',
 	        'count_calls' => 'required',
 	        'CallMaxCount' => 'required',
-	        'StartHour' => 'required',
+	        'StartHour' => 'required',*/
 		]);
 		
+
  		$OktellTasks = DB::table('oktell_settings.dbo.A_TaskManager_Tasks')
  			->leftJoin('oktell_settings.dbo.A_TaskManager_Projects','A_TaskManager_Projects.Id','=','A_TaskManager_Tasks.IdProject')
  			->where('A_TaskManager_Tasks.Id','=', request('task_id'))
  			->select('A_TaskManager_Tasks.*','A_TaskManager_Projects.Name as A_TaskManager_Projects_Name')
  			->first();
-		
+
+		$project = Project::where('uuid',$OktellTasks->IdProject)->first();
+
 		Task::create([
-			'task_id' => request('task_id'),
+			'uuid' => $OktellTasks->Id,
 			'task_table' => request('task_table'),
 			'task_abonent' => request('task_abonent'),
 			'task_phone' => request('task_phone'),
-			'project' => $OktellTasks->A_TaskManager_Projects_Name,
-			'project_id' => $OktellTasks->IdProject,
+			
+			'project_id' => $project->id,
 			'user_id' => Auth::id(),
 			'is_taskid' => !empty(request('is_taskid')) ? "true" : "false",
+			'is_new_algorithm' => !empty(request('is_new_algorithm')) ? "true" : "false",
 			'name' => $OktellTasks->Name,
 			'min_client_time_calls' => request('min_client_time_calls'),
 			'max_client_time_calls' => request('max_client_time_calls'),
 		]);
+ 		if(request()->is_new_algorithm){
+			OktellSetting::create([
+				'idtask' => request('task_id'),
+				'waitcall_min' => request('waitcall_min'),
+				'waitcall_max' => request('waitcall_max'),
+				'max_queue' => request('max_queue'),
+				'startqueue' => request('startqueue'),
+				'startcount' => request('startcount'),
+				'count_calls' => request('count_calls'),
+				'CallMaxCount' => request('CallMaxCount'),
+				'StartHour' => request('StartHour'),
+			]);
+ 		}
 
-		OktellSetting::create([
-			'idtask' => request('task_id'),
-	        'waitcall_min' => request('waitcall_min'),
-	        'waitcall_max' => request('waitcall_max'),
-	        'max_queue' => request('max_queue'),
-	        'startqueue' => request('startqueue'),
-	        'startcount' => request('startcount'),
-	        'count_calls' => request('count_calls'),
-	        'CallMaxCount' => request('CallMaxCount'),
-	        'StartHour' => request('StartHour'),
-		]);
 
 		return redirect()->back();
 	}

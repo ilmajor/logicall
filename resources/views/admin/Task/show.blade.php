@@ -19,6 +19,16 @@
 				value="{{ $Task->task_abonent }}">
 			</div>
 			<div class="form-group">
+				<div class="form-check form-check-inline">
+					@if( $Task->is_new_algorithm == true )
+						<input class="form-check-input" type="checkbox" id="is_new_algorithm" name="is_new_algorithm" value="{{ $Task->id }}" checked>
+					@else
+						<input class="form-check-input" type="checkbox" id="is_new_algorithm" name="is_new_algorithm" value="{{ $Task->id }}">
+					@endif
+					<label class="form-check-label" for="inlineCheckbox1">Ноый алгоритм обзвона</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="task_phone">Оперативная таблица номеров:</label>
 				<input type="text" class="form-control" id="task_phone" name="task_phone" aria-describedby="task_phone" 
 				value="{{ $Task->task_phone }}">

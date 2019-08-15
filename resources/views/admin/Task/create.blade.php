@@ -25,13 +25,20 @@
 		</div>
 
 		<div class="form-group">
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="checkbox" id="is_new_algorithm" name="is_new_algorithm" value="true">
+				<label class="form-check-label" for="inlineCheckbox1">Ноый алгоритм обзвона</label>
+			</div>
+		</div>
+
+		<div class="form-group">
 			<label for="task_abonent">Оперативная таблица абонентов:</label>
-			<input type="text" class="form-control" id="task_abonent" name="task_abonent" required>
+			<input type="text" class="form-control" id="task_abonent" name="task_abonent">
 		</div>
 
 		<div class="form-group">
 			<label for="task_phone">Оперативная таблица номеров:</label>
-			<input type="text" class="form-control" id="task_phone" name="task_phone" required>
+			<input type="text" class="form-control" id="task_phone" name="task_phone">
 		</div>
 		
 		<div class="form-group">
@@ -45,35 +52,35 @@
 		<h6>Начальные настройки для задачи.</h6>
 		<div class="form-group">
 			<label for="waitcall_max">Верхняя граница ожидания оператором нового звонка:</label>
-			<input type="text" class="form-control" id="waitcall_max" name="waitcall_max" required>
+			<input type="text" class="form-control" id="waitcall_max" name="waitcall_max">
 		</div>
 		<div class="form-group">
 			<label for="waitcall_min">Нижняя граница ожидания оператором нового звонка:</label>
-			<input type="text" class="form-control" id="waitcall_min" name="waitcall_min" required>
+			<input type="text" class="form-control" id="waitcall_min" name="waitcall_min">
 		</div>
 		<div class="form-group">
 			<label for="CallMaxCount">Максимальное количество звонков на оператора:</label>
-			<input type="text" class="form-control" id="CallMaxCount" name="CallMaxCount" required>
+			<input type="text" class="form-control" id="CallMaxCount" name="CallMaxCount">
 		</div>
 		<div class="form-group">
 			<label for="max_queue">Макисмальная длина очереди для задачи:</label>
-			<input type="text" class="form-control" id="max_queue" name="max_queue" required>
+			<input type="text" class="form-control" id="max_queue" name="max_queue">
 		</div>
 		<div class="form-group">
 			<label for="StartHour">Час начала работы задачи:</label>
-			<input type="text" class="form-control" id="StartHour" name="StartHour" required>
+			<input type="text" class="form-control" id="StartHour" name="StartHour">
 		</div>
 		<div class="form-group">
 			<label for="startcount">Стартовое значение числа звонков на день для задачи:</label>
-			<input type="text" class="form-control" id="startcount" name="startcount" required>
+			<input type="text" class="form-control" id="startcount" name="startcount">
 		</div>
 		<div class="form-group">
 			<label for="startqueue">Стартовое значение очереди на день для задачи:</label>
-			<input type="text" class="form-control" id="startqueue" name="startqueue" required>
+			<input type="text" class="form-control" id="startqueue" name="startqueue">
 		</div>
 		<div class="form-group">
 			<label for="count_calls">Количество звонков на клиента:</label>
-			<input type="text" class="form-control" id="count_calls" name="count_calls" required>
+			<input type="text" class="form-control" id="count_calls" name="count_calls">
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Создать</button>

@@ -59,7 +59,7 @@ class TecosController extends Controller
 		  'task' => 'required',
 		]);
 
-		$task = Task::find(7);
+		$task = Task::find(request('task'));
 		$daily = $task->task_table;
 		$uuid = $task->uuid;
 	
