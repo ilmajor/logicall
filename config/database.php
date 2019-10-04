@@ -77,6 +77,9 @@ return [
             'prefix'   => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
+            'options'   => array(
+                PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE => false,
+            ),
         ],
         'oktell' => [
             'driver'   => 'sqlsrv',
@@ -88,6 +91,9 @@ return [
             'prefix'   => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
+            'options'   => array(
+                PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE => false,
+            ),
         ],
 /*        'sqlsrv_oktell' => [
             'driver'   => 'sqlsrv',

@@ -11,7 +11,7 @@
   <li class="nav-item">
     <a class="nav-link" id="IsDeleted-tab" data-toggle="tab" href="#IsDeleted" role="tab" aria-controls="IsDeleted" aria-selected="false">Уволены</a>
   </li>
-</ul>
+</ul> 
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="isWork" role="tabpanel" aria-labelledby="isWork-tab">
     <div class="table-responsive">

@@ -46,7 +46,7 @@ class TecosController extends Controller
     			,count('.$tecos->task_table_daily.'.id) as baseSizeDaily'
     		)
     		->groupBy($tecos->task_table.'.ID_CAMPAIGN',$tecos->task_table.'.insertdatetime')
-    		->orderBy($tecos->task_table.'.insertdatetime')
+    		->orderBy(DB::raw('cast('.$tecos->task_table.'.insertdatetime as date)'))
     		->get();
 
 		return view('project.sberbankLE.task',compact([
@@ -55,7 +55,7 @@ class TecosController extends Controller
 		]));
     }
 
-    public function start($id, $id_campaign){
+    public function start($id, $id_campaign, $date){
         $user = User::find(Auth::id());
         $task = Task::find($id);
         $tecos = Tecos::where('uuid','=',$task->uuid)
@@ -90,18 +90,20 @@ class TecosController extends Controller
                 ' select *,getdate()
                 from '. $tecos->task_table .'
                 where ID_CAMPAIGN = :id_campaign
+                and cast(insertdatetime as date) = :date
                 and id not in (
                     select id from '. $tecos->task_table_daily 
                 .') '
                 ,[
-                    'id_campaign'=>$id_campaign,
+                    'id_campaign' => $id_campaign,
+                    'date' => $date,
                 ]
             );
 
         return redirect()->back();
     }
 
-    public function stopTemporarily($id, $id_campaign){
+    public function stopTemporarily($id, $id_campaign, $date){
         $user = User::find(Auth::id());
         $task = Task::find($id);
         $tecos = Tecos::where('uuid','=',$task->uuid)
@@ -118,12 +120,13 @@ class TecosController extends Controller
         $delete = DB::connection('oktell')
             ->table($tecos->task_table_daily)
             ->where('ID_CAMPAIGN',$id_campaign)
+            ->where(DB::raw('cast(insertdatetime as date)'),$date)
             ->delete();
 
         return redirect()->back();
     }
 
-    public function stopForever($id, $id_campaign){
+    public function stopForever($id, $id_campaign, $date){
         $user = User::find(Auth::id());
         $task = Task::find($id);
         $tecos = Tecos::where('uuid','=',$task->uuid)
@@ -140,8 +143,9 @@ class TecosController extends Controller
         $delete = DB::connection('oktell')
             ->table($tecos->task_table_daily)
             ->where('ID_CAMPAIGN',$id_campaign)
+            ->where(DB::raw('cast(insertdatetime as date)'),$date)
             ->delete();
-        
+
         return redirect()->back();
     }
 }

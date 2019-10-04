@@ -17,4 +17,8 @@ class Task extends Model
     {
     	return $this->hasOne(\App\project\sberbankLE\Tecos::class,'uuid','uuid');
     }
+    public function databaseExclusion()
+    {
+        return $this->hasMany(DatabaseExclusion::class);
+    }
 }

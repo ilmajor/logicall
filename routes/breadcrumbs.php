@@ -28,6 +28,19 @@ Breadcrumbs::for('projectSberbankIndividualsController', function ($trail) {
     $trail->push('Претензии по Follow-Up', route('projectSberbankIndividualsController'));
 });
 
+// Home > DatabaseExclusion
+Breadcrumbs::for('DatabaseExclusions', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Исключение баз', route('DatabaseExclusions'));
+});
+
+// Home > DatabaseExclusion > [DatabaseExclusion]
+Breadcrumbs::for('DatabaseExclusion', function ($trail, $id) {
+    $Task = App\Task::findOrFail($id);
+    $trail->parent('DatabaseExclusions');
+    $trail->push($Task->name, route('DatabaseExclusion', $Task->id));
+});
+
 // Home > tecos
 Breadcrumbs::for('tecos', function ($trail) {
     $trail->parent('home');

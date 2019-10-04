@@ -96,7 +96,14 @@ class OktellController extends Controller
   {
     $data = User::find($id);
     $roleWeight = $data->roles->max('weight');
-    $managers = Role::find(2)->users;
+    //$managers = Role::find(2)->users;
+
+
+    $managers = User::whereHas('roles', function ($query) {
+        $query->whereIn('roles.id' ,[2,1002]);
+      })
+      ->orderBy('users.name','asc')
+      ->get();
     $projects = Project::orderBy('name')->get();
     $profile = Profile::where('user_id',$id)->first();
     $userProjects = $data->projects->pluck('id')->toArray();

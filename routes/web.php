@@ -19,10 +19,13 @@ Route::post('/project/sberbankIndividualsController','Project\SberbankIndividual
 #tecos
 Route::get('/project/tecos','Project\sberbankLE\TecosController@index')->name('tecos');
 Route::get('/project/tecos/{id}','Project\sberbankLE\TecosController@show')->name('tecosShow');
-Route::get('/project/tecos/start/{id}/{id_campaign}','Project\sberbankLE\TecosController@start')->name('tecosStart');
-Route::get('/project/tecos/stopTemporarily/{id}/{id_campaign}','Project\sberbankLE\TecosController@stopTemporarily')
-	->name('tecosStopTemporarily');
-Route::get('/project/tecos/stopForever/{id}/{id_campaign}','Project\sberbankLE\TecosController@stopForever')
+Route::get('/project/tecos/start/{id}/{id_campaign}/{date}','Project\sberbankLE\TecosController@start')
+	->name('tecosStart');
+Route::get(
+		'/project/tecos/stopTemporarily/{id}/{id_campaign}/{date}'
+		,'Project\sberbankLE\TecosController@stopTemporarily'
+	)->name('tecosStopTemporarily');
+Route::get('/project/tecos/stopForever/{id}/{id_campaign}/{date}','Project\sberbankLE\TecosController@stopForever')
 	->name('tecosStopForever');
 //Route::post('/project/sberbankLE/Tecos','Project\sberbankLE\Tecos@store');
 
@@ -45,6 +48,11 @@ Route::post('/users/{id}','OktellController@updateUser')->name('userUpdate');
 Route::get('/algorithmSettings','AlgorithmSettingsController@task')->name('algorithmSettings');
 Route::get('/algorithmSettings/{id}','AlgorithmSettingsController@index')->name('algorithmSetting');
 Route::post('/algorithmSettings/{id}','AlgorithmSettingsController@update');
+#exclusion Database 
+Route::get('/DatabaseExclusion','DatabaseExclusionController@index')->name('DatabaseExclusions');
+Route::get('/DatabaseExclusion/{id}','DatabaseExclusionController@show')->name('DatabaseExclusion');
+Route::post('/DatabaseExclusion/{id}','DatabaseExclusionController@exclusion');
+Route::post('/DatabaseInclusion/{id}','DatabaseExclusionController@inclusion');
 
 #admin
 Route::get('/admin','Admin\IndexController@index')->name('admin');
@@ -70,8 +78,12 @@ Route::delete('/admin/role/{id}','Admin\RolesController@destroy');
 Route::get('/admin/task/create','Admin\AlgorithmSettingsController@create')->name('adminTaskCreate');
 Route::post('/admin/task/create','Admin\AlgorithmSettingsController@store');
 Route::get('/admin/task','Admin\AlgorithmSettingsController@index')->name('admnTasks');
-Route::get('admin/task/{id}','Admin\AlgorithmSettingsController@show')->name('admnTask');
+Route::get('/admin/task/{id}','Admin\AlgorithmSettingsController@show')->name('admnTask');
 Route::post('/admin/task/{id}','Admin\AlgorithmSettingsController@update');
+#exclusion Database
+Route::get('/admin/DatabaseExclusion/','Admin\DatabaseExclusionController@index')->name('admnDatabaseExclusions');
+Route::get('/admin/DatabaseExclusion/{id}/','Admin\DatabaseExclusionController@show')->name('admnDatabaseExclusion');
+Route::post('/admin/DatabaseExclusion/{id}/','Admin\DatabaseExclusionController@update');
 #project
 #SberBank LE
 Route::get('/admin/project/sberbank/tecos/create','Admin\project\sberbankLE\TecosController@create')

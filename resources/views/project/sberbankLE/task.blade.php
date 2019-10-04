@@ -7,9 +7,9 @@
         @foreach ($baseSize as $base )
           
             <div class="card">
-              <div class="card-header" id="headingOne{{ $base->ID_CAMPAIGN}}">
+              <div class="card-header" id="{{ $base->ID_CAMPAIGN}}{{ $base->dte }}">
                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{ $base->ID_CAMPAIGN}}" aria-expanded="true" aria-controls="collapseOne{{ $base->ID_CAMPAIGN}}">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#{{ $base->ID_CAMPAIGN}}{{ $base->dte }}" aria-expanded="true" aria-controls="{{ $base->ID_CAMPAIGN}}{{ $base->dte }}">
                       {{ $base->ID_CAMPAIGN}}
                       | {{ $base->dte}}
                       | {{ $base->baseSize}}
@@ -22,13 +22,13 @@
                     @endif
                   </li>
               </div>
-              <div id="collapseOne{{ $base->ID_CAMPAIGN}}" class="collapse" aria-labelledby="headingOne{{ $base->ID_CAMPAIGN}}" data-parent="#accordionExample{{ $task->id}}">
+              <div id="{{ $base->ID_CAMPAIGN}}{{ $base->dte }}" class="collapse" aria-labelledby="{{ $base->ID_CAMPAIGN}}{{ $base->dte }}" data-parent="#accordionExample{{ $task->id}}">
                 <div class="card-body">
                   @if($base->baseSizeDaily < $base->baseSize)
-                    <p><a href='/lk/project/tecos/start/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}' class='btn btn-success'>Включить</a></p>
+                    <p><a href='/lk/project/tecos/start/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}/{{ $base->dte}}' class='btn btn-success'>Включить</a></p>
                   @else
-                    <p><a href='/lk/project/tecos/stopTemporarily/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}' class='btn btn-danger'>Выключить только для Oktell(не быдет выгружатся отчет RESP)</a></p>
-                    <p><a href='/lk/project/tecos/stopForever/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}' class='btn btn-danger'>Выключить совсем!!!</a></p>
+                    <p><a href='/lk/project/tecos/stopTemporarily/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}/{{ $base->dte}}' class='btn btn-danger'>Выключить только для Oktell(не быдет выгружатся отчет RESP)</a></p>
+                    <p><a href='/lk/project/tecos/stopForever/{{ $task->id }}/{{ $base->ID_CAMPAIGN}}/{{ $base->dte}}' class='btn btn-danger'>Выключить совсем!!!</a></p>
                   @endif
 
                 </div>

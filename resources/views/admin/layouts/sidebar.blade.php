@@ -68,6 +68,12 @@
       Редактировать.
     </a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/lk/admin/DatabaseExclusion">
+      {{-- <span data-feather="users"></span> --}}
+      Настройки для исключения баз абонентов.
+    </a>
+  </li>
   <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
     <span>Тэкос.</span>
     <a class="d-flex align-items-center text-muted" href="#"></a>

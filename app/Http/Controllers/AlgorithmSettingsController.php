@@ -61,7 +61,7 @@ class AlgorithmSettingsController extends Controller
         ->where($task->task_phone.'.next_call_time', '<', Carbon::now())
         ->whereNull($task->task_phone.'.bad_num')
         ->whereIn($task->task_abonent.'.id_abonent',function($query) use($task){
-          $query->select('id')->from($task->task_table);
+          $query->select('id')->from($task->task_table)->whereNull('statusflag');
         })
         ->where(function($query){
           $query->where('date_last_changes','<',Carbon::now())
