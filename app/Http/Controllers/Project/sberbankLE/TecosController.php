@@ -73,6 +73,7 @@ class TecosController extends Controller
                 'TaskId' => $task->uuid,
                 'iduser' => $user->id_user,
                 'done' => 2,
+                'base_date'=>$date,
             ]);
         } else {
             TecosLogStart::create([
@@ -81,6 +82,7 @@ class TecosController extends Controller
                 'TaskId' => $task->uuid,
                 'iduser' => $user->id_user,
                 'done' => 0,
+                'base_date'=>$date,
             ]);
         }
 
@@ -115,6 +117,7 @@ class TecosController extends Controller
             'TaskId' => $task->uuid,
             'iduser' => $user->id_user,
             'done' => 2,
+            'base_date'=>$date,
         ]);
 
         $delete = DB::connection('oktell')
@@ -138,6 +141,7 @@ class TecosController extends Controller
             'TaskId' => $task->uuid,
             'iduser' => $user->id_user,
             'done' => 0,
+            'base_date'=>$date,
         ]);
 
         $delete = DB::connection('oktell')
