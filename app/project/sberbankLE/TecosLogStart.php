@@ -18,5 +18,6 @@ class TecosLogStart extends Model
         'TaskId',
         'iduser',
         'done',
+        'base_date',
     ];
 }

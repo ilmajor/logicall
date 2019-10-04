@@ -73,7 +73,7 @@ class TecosController extends Controller
                 'TaskId' => $task->uuid,
                 'iduser' => $user->id_user,
                 'done' => 2,
-                'base_date'=>$date,
+                'base_date' => $date,
             ]);
         } else {
             TecosLogStart::create([
@@ -82,7 +82,7 @@ class TecosController extends Controller
                 'TaskId' => $task->uuid,
                 'iduser' => $user->id_user,
                 'done' => 0,
-                'base_date'=>$date,
+                'base_date' = >$date,
             ]);
         }
 
