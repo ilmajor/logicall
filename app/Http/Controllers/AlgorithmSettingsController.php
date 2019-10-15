@@ -45,6 +45,7 @@ class AlgorithmSettingsController extends Controller
         ->table("oktell.dbo.udf_go_from_queue_callout_from_dialing ('$task->uuid')")
         ->first();
 
+      $date = Carbon::now();
       $baseData = DB::table($task->task_abonent)
         ->leftJoin($task->task_phone, function ($join) use($task) {
           if($task->is_taskid == 1){
@@ -58,20 +59,20 @@ class AlgorithmSettingsController extends Controller
         ->where($task->task_abonent.'.in_work', '=', 'NO')
         ->whereNotIn($task->task_abonent.'.status',[50])
         ->where($task->task_phone.'.count', '<', $settings->count_calls)
-        ->where($task->task_phone.'.next_call_time', '<', Carbon::now())
+        ->where($task->task_phone.'.next_call_time', '<', $date )
         ->whereNull($task->task_phone.'.bad_num')
         ->whereIn($task->task_abonent.'.id_abonent',function($query) use($task){
           $query->select('id')->from($task->task_table)->whereNull('statusflag');
         })
-        ->where(function($query){
-          $query->where('date_last_changes','<',Carbon::now())
+        ->where(function($query)use($date){
+          $query->where('date_last_changes','<',$date )
             ->orWhereNull('date_last_changes');
         })
-        ->where(function($query) use($task){
+        ->where(function($query) use($task,$settings){
           $query->whereNull($task->task_abonent.'.TIMEDIFF')
             ->orWhereBetween(
               DB::raw('TIMEDIFF + datepart(hh,getdate())')
-              ,[$task->min_client_time_calls,$task->max_client_time_calls]
+              ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
             );
         })
         ->where(function($query) use($task){
@@ -83,11 +84,51 @@ class AlgorithmSettingsController extends Controller
         ->selectRaw('count(*) as selection,( select count(*) as cc  from '.$task->task_table.') as base')
         ->first();
 
+      $date = Carbon::tomorrow()->addHour(7);
+      $baseDataTomorrow = DB::table($task->task_abonent)
+        ->leftJoin($task->task_phone, function ($join) use($task) {
+          if($task->is_taskid == 1){
+            $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent')
+              ->on($task->task_abonent.'.TaskId','=',$task->task_phone.'.TaskId');
+          }
+          else {
+            $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent');
+          }
+        })
+        ->where($task->task_abonent.'.in_work', '=', 'NO')
+        ->whereNotIn($task->task_abonent.'.status',[50])
+        ->where($task->task_phone.'.count', '<', $settings->count_calls)
+        ->where($task->task_phone.'.next_call_time', '<', $date)
+        ->whereNull($task->task_phone.'.bad_num')
+        ->whereIn($task->task_abonent.'.id_abonent',function($query) use($task){
+          $query->select('id')->from($task->task_table)->whereNull('statusflag');
+        })
+        ->where(function($query)use($date){
+          $query->where('date_last_changes','<',$date)
+            ->orWhereNull('date_last_changes');
+        })
+        ->where(function($query) use($task,$settings){
+          $query->whereNull($task->task_abonent.'.TIMEDIFF')
+            ->orWhereBetween(
+              DB::raw('TIMEDIFF + datepart(hh,DATEADD (HOUR,'.$settings->StartHour.',cast(DATEADD(d,1,cast(getdate() as date))as datetime)))')
+              ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
+            );
+        })
+        ->where(function($query) use($task){
+          if($task->is_taskid == 1){
+            $query->where($task->task_abonent.'.TaskId','=',$task->uuid);
+          }
+            
+        })
+        ->selectRaw('count(*) as selection')
+        ->first();
+
       return view('algorithmSettings.index',compact([
          'task',
          'baseData',
          'queue',
-         'settings'
+         'settings',
+         'baseDataTomorrow'
          ])
       );
    }

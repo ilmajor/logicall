@@ -30,17 +30,22 @@ class AlgorithmSettingsController extends Controller
 	public static function show($id)
 	{
 		$Task = Task::find($id);
+		$OktellSetting = OktellSetting::where('idtask',$Task->uuid)->first();
 		
-		return view('admin.task.show',compact('Task'));
+		return view('admin.task.show',compact(['OktellSetting','Task']));
 	}
 	public static function update($id)
 	{
 		#dd(request()->input('is_taskid'));
 	    $Task = Task::find($id);
-	    $Task->update(request()->except(['_method','_token']));
+	    $OktellSetting = OktellSetting::where('idtask',$Task->uuid)->first();
+	    $Task->update(request()->except(['_method','_token','max_client_time_calls','']));
 	    
 	    $Task->is_taskid = empty(request()->input('is_taskid')) ? 0 : 1;
 	    $Task->save();
+	    $OktellSetting->MaxClientTimeCalls = request('max_client_time_calls');
+	    $OktellSetting->MinClientTimeCalls = request('min_client_time_calls');
+	    $OktellSetting->save();
 	    return redirect()->back();
 	}
 	public function create()
@@ -90,8 +95,7 @@ class AlgorithmSettingsController extends Controller
 			'is_taskid' => !empty(request('is_taskid')) ? "true" : "false",
 			'is_new_algorithm' => !empty(request('is_new_algorithm')) ? "true" : "false",
 			'name' => $OktellTasks->Name,
-			'min_client_time_calls' => request('min_client_time_calls'),
-			'max_client_time_calls' => request('max_client_time_calls'),
+
 		]);
  		if(request()->is_new_algorithm){
 			OktellSetting::create([
@@ -104,6 +108,8 @@ class AlgorithmSettingsController extends Controller
 				'count_calls' => request('count_calls'),
 				'CallMaxCount' => request('CallMaxCount'),
 				'StartHour' => request('StartHour'),
+				'MinClientTimeCalls' => request('min_client_time_calls'),
+				'MaxClientTimeCalls' => request('max_client_time_calls'),
 			]);
  		}
 

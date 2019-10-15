@@ -95,6 +95,44 @@ class User extends Authenticatable
     {
       return $this->belongsToMany(Project::class)->withTimestamps();
     }
+
+    public function OktellUserControls()
+    {
+        return $this->belongsToMany(
+            OktellUserControl::class,
+            'A_Users',
+            'id',
+            'id',
+            'id_user', // переменная для where
+            'UserA',
+            null,
+            null,
+        );
+/*
+        public function belongsToMany(
+            $related, 
+            $table = null,
+            $foreignPivotKey = null,
+            $relatedPivotKey = null,
+            $parentKey = null,
+            $relatedKey = null,
+            $relation = null
+        )
+*/
+    }
+
+    public function OktellUserUnderControls()
+    {
+        return $this->belongsToMany(         
+            'A_Users',
+            'id',
+            'id',
+            'id_user', // переменная для where
+            'UserB',
+            null,
+            null,);
+    }
+
 /*    public function sections()
     {
       return $this->hasMany(Section::class);

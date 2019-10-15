@@ -64,6 +64,7 @@ class TecosController extends Controller
         $log = TecosLogStart::firstOrNew([
             'ID_CAMPAIGN' => $id_campaign,
             'TaskId' => $task->uuid,
+            'base_date' => $date,
         ]);
 
         if ($log->exists) {
@@ -82,7 +83,7 @@ class TecosController extends Controller
                 'TaskId' => $task->uuid,
                 'iduser' => $user->id_user,
                 'done' => 0,
-                'base_date' = >$date,
+                'base_date' => $date,
             ]);
         }
 

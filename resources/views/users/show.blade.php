@@ -171,7 +171,133 @@
                 <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" aria-describedby="MobilePhone" value="{{ $profile->MobilePhone }}">
             </div>
 
+            <hr>
+            <h3>Права контроля.</h3>
 
+{{--             <div class="form-group">
+                <label for="project">Контролирует:</label>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10' 
+                @if($roleWeight > $userRoleWeight )
+                    disabled>
+                @else
+                    required>
+                @endif
+                    <option></option>
+                        @foreach($users as $user)
+                            @if((!empty($UsersUnderControl)) && in_array($user->id_user, $UsersUnderControl))
+                                <option value="{{$user->id_user}}" selected>{{$user->name}}</option>
+                             @else 
+                                <option value="{{$user->id_user}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                </select>
+            </div> --}}
+{{--             <div class="form-group">
+                <label for="project">Подчиняется:</label>
+                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10' 
+                @if($roleWeight > $userRoleWeight )
+                    disabled>
+                @else
+                    required>
+                @endif
+                    <option></option>
+                        @foreach($users as $user)
+                            @if((!empty($UsersControl)) && in_array($user->id_user, $UsersControl))
+                                <option value="{{$user->id_user}}" selected>{{$user->name}}</option>
+                             @else 
+                                <option value="{{$user->id_user}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                </select>
+            </div> --}}
+            
+            <div class="form-group">
+                <label for="project">Подчиняется:</label>
+                <div style="border:2px solid #ccc; width:100%; height: 250px; overflow-y: scroll;">
+                    
+                    <table class="table table-sm">
+                        <tbody>
+                            @foreach($users as $user)
+                                <tr>
+                                    @if((!empty($UsersControl)) && in_array($user->id_user, $UsersControl))
+                                        <td>
+                                            <label for="{{$user->id_user}}">
+                                                {{$user->name}}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
+                                               @if($roleWeight > $userRoleWeight )
+                                                    disabled>
+                                                @else
+                                                    >
+                                                @endif
+                                        </td>
+                                    @else 
+                                        <td>
+                                            <label  for="{{$user->id_user}}">
+                                                {{$user->name}}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <input  type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
+                                              @if($roleWeight > $userRoleWeight )
+                                                    disabled>
+                                                @else
+                                                    >
+                                                @endif                                            
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="project">Контролирует:</label>
+                <div style="border:2px solid #ccc; width:100%; height: 250px; overflow-y: scroll;">
+                    
+                    <table class="table table-sm">
+                        <tbody>
+                            @foreach($users as $user)
+                                <tr>
+                                    @if((!empty($UsersUnderControl)) && in_array($user->id_user, $UsersUnderControl))
+                                        <td>
+                                            <label for="{{$user->id_user}}">
+                                                {{$user->name}}
+                                            </label>
+                                        </td>
+                                        <td><input type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
+                                            @if($roleWeight > $userRoleWeight )
+                                                disabled>
+                                            @else
+                                                >
+                                            @endif
+                                        </td>
+                                    @else 
+                                        <td>
+                                            <label  for="{{$user->id_user}}">
+                                                {{$user->name}}
+                                            </label>
+                                        </td>
+                                        <td><input  type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
+
+                                            @if($roleWeight > $userRoleWeight )
+                                                disabled>
+                                            @else
+                                                >
+                                            @endif
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form> 
     </div>

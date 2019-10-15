@@ -46,12 +46,12 @@
 			<div class="form-group">
 				<label for="min_client_time_calls">Начало допустимого интервала звонка:</label>
 				<input type="text" class="form-control" id="min_client_time_calls" name="min_client_time_calls" aria-describedby="min_client_time_calls" 
-				value="{{ $Task->min_client_time_calls }}">
+				value="{{ $OktellSetting->MinClientTimeCalls }}">
 			</div>
 			<div class="form-group">
 				<label for="max_client_time_calls">Конец допустимого интервала звонка:</label>
 				<input type="text" class="form-control" id="max_client_time_calls" name="max_client_time_calls" aria-describedby="max_client_time_calls" 
-				value="{{ $Task->max_client_time_calls }}">
+				value="{{ $OktellSetting->MaxClientTimeCalls }}">
 			</div>
 
 		</div>

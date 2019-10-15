@@ -13,7 +13,11 @@
 			</h5>
 			<h5> | % потеряных в очереди:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «клиент прервавший ожидание в очереди» / «общее количество клиентов с которым происходила коммутация">{{round($queue->go_from_queue_percent,2)}}</span></h5>
 			<h5> | % Отбоя из дозванивающихся:  <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="это процентное отношение «Отбоя из дозвонившихся» / «общее количество клиентов с которым происходила коммутация». Если в поле «кол-во звонков на оператора» указано 2, то система набирает 2 вызова, первого ответившего клиента отправляет на оператора, второго сбрасывает. Нужно следить за этим значением и регулировать настройки если данное значение растет.">{{round($queue->callout_from_dialing_percent,2)}}</span></h5>
-			<h5> | Обзвон происходит с {{$task->min_client_time_calls}} до {{$task->max_client_time_calls}} по времени клиента.</h5>
+			<h5> | Обзвон происходит с {{$settings->MinClientTimeCalls}} до {{$settings->MaxClientTimeCalls}} по времени клиента.</h5>
+			<h5>
+				 | Доступно для обзвона на завтра:  
+				<span class="badge badge-secondary" id="" data-toggle="tooltip" data-placement="top" title="кол-во контактов, которые доступны для обзвона сейчас на завтра c 'Часа начала работы задачи', данное значение меняется исходя из кол-ва выставленных попыток и по мере обработки базы операторами.">{{$baseDataTomorrow->selection}}</span>
+			</h5>
 
 
 		</div>
