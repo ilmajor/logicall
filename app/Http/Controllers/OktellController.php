@@ -103,7 +103,7 @@ class OktellController extends Controller
         $join->on('users.id_user', '=', 'A_users.id');
       })
       ->orWhereHas('roles', function ($query) use($rights)  {
-        $query->where('roles.weight' ,'<=' , User::find(Auth::id())->roles->max('weight'))
+        $query->where('roles.weight' ,'<' , User::find(Auth::id())->roles->max('weight'))
         ->whereNotIn(
             'role_user.user_id'
             ,$rights !== null ? $rights->users->pluck('id') : [0]

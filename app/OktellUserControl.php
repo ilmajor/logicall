@@ -37,7 +37,7 @@ class OktellUserControl extends Model
             'id_user', // переменная для where
             'UserA',
             null,
-            null,
+            null
         );
     }
 }
