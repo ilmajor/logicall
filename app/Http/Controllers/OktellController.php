@@ -110,9 +110,10 @@ class OktellController extends Controller
           );
       })
       ->where('IsDeleted',0)
+      ->where('users.id','!=',$id)
       ->orderBy('users.name','asc')
       ->get(); 
-
+    
     $data = User::find($id);
     $roleWeight = $data->roles->max('weight');
     //$managers = Role::find(2)->users;

@@ -227,8 +227,9 @@
                                         </td>
                                         <td>
                                             <input type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
-                                               @if($roleWeight > $userRoleWeight )
+                                               @if($roleWeight >= $userRoleWeight && Auth::id() != $data->id )
                                                     disabled>
+                                                    {{-- userRoleWeight залогинившийся  roleWeight просматриваемый--}}
                                                 @else
                                                     >
                                                 @endif
@@ -236,12 +237,12 @@
                                     @else 
                                         <td>
                                             <label  for="{{$user->id_user}}">
-                                                {{$user->name}}
+                                                {{$user->name}} 
                                             </label>
                                         </td>
                                         <td>
                                             <input  type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
-                                              @if($roleWeight > $userRoleWeight )
+                                              @if($roleWeight >= $userRoleWeight && Auth::id() != $data->id )
                                                     disabled>
                                                 @else
                                                     >
@@ -270,7 +271,7 @@
                                             </label>
                                         </td>
                                         <td><input type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
-                                            @if($roleWeight > $userRoleWeight )
+                                            @if($roleWeight >= $userRoleWeight && Auth::id() != $data->id )
                                                 disabled>
                                             @else
                                                 >
@@ -284,7 +285,7 @@
                                         </td>
                                         <td><input  type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
 
-                                            @if($roleWeight > $userRoleWeight )
+                                            @if($roleWeight >= $userRoleWeight && Auth::id() != $data->id )
                                                 disabled>
                                             @else
                                                 >

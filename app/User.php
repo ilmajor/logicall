@@ -106,7 +106,7 @@ class User extends Authenticatable
             'id_user', // переменная для where
             'UserA',
             null,
-            null,
+            null
         );
 /*
         public function belongsToMany(
@@ -130,7 +130,8 @@ class User extends Authenticatable
             'id_user', // переменная для where
             'UserB',
             null,
-            null,);
+            null
+        );
     }
 
 /*    public function sections()
