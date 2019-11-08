@@ -52,12 +52,13 @@
             <div class="form-group">
                 <label for="City">Площадка.</label>
                 <select class="form-control form-control" id="City" name="City" aria-describedby="City">
-                    <option>{{ $profile->City }}</option>
-                    <option>Саранск</option>
-                    <option>Красноярск</option>
-                    <option>Москва</option>
-                    <option>Самара</option>
-                    <option></option>
+                    @foreach($cities as $city)
+                        @if((!empty($city)) && ((int) $profile->City == $city->id))
+                            <option value="{{$city->id}}" selected>{{$city->name}}</option>
+                        @else 
+                            <option value="{{$city->id}}">{{$city->name}}</option>
+                        @endif
+                    @endforeach
                 </select>
             </div>
             <div class="form-group">
@@ -87,6 +88,7 @@
 
                     <option>Оператор 2 категории</option>
                     <option>Оператор 3 категории</option>
+                    <option>Специалист 3 категории</option>
                 </select>
                 
             </div>

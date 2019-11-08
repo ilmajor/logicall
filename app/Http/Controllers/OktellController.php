@@ -12,6 +12,7 @@ use App\Profile;
 use App\Project;
 use App\OktellUserControl;
 use Illuminate\Support\Facades\Auth;
+use App\City;
 
 class OktellController extends Controller
 {
@@ -31,7 +32,7 @@ class OktellController extends Controller
     $this->validate(request(),[
       'Surname' => 'required|min:3',
       'Name' => 'required|min:3',
-      'middleName' => 'required|min:3',
+      'middleName' => 'required|min:3'
     ]);
     $Surname = trim(request('Surname'));
     $Name = trim(request('Name'));
@@ -39,32 +40,35 @@ class OktellController extends Controller
     $fio = $Surname.' '.$Name.' '.$middleName;
     $login = $Surname.mb_substr($Name,0,1,"UTF-8").mb_substr($middleName,0,1,"UTF-8");
     $idUser = collect(\DB::connection('sqlsrv_srn')->select('select NEWID() as id'))->first();
+    $password = trim(request('password'));
 
+    $password = !empty($password) ? $password : $login;
     $user = User::create([
       'name' => $fio,
       'login' => $login,
-      'password' => mb_strtoupper(md5(mb_convert_encoding($login,'cp1251'))),
+      'password' => mb_strtoupper(md5(mb_convert_encoding($password,'cp1251'))),
       'id_user' => $idUser->id,
-    ]);
+    ]);*/
 
     $user
-      ->roles()
+    ->roles()
       ->attach(Role::where('name', 'Operator')->first()); 
 
     $profile = Profile::create([
       'user_id' => $user->id,
       'FullName' => $user->name,
     ]);
-
     $data = DB::connection('oktell')->select("
       exec [oktell].[dbo].[usp_create_user] 
       :name
       , :login
       , :idUser
+      , :password
       ",[
       'name' => $fio,
       'login' => $login,
-      'idUser' => $idUser->id
+      'idUser' => $idUser->id,
+      'password' => $password
     ]);
 
     return view('users.create',compact([
@@ -98,13 +102,18 @@ class OktellController extends Controller
     $rights = Role::where('weight','>',User::find(Auth::id())->roles->max('weight'))
       ->with('users')
       ->first();
-    
+    $data = User::find($id);
+
+    $roleWeight = $data->roles->max('weight');
     $users = User::join('oktell.dbo.A_users', function ($join) {
         $join->on('users.id_user', '=', 'A_users.id');
       })
-      ->orWhereHas('roles', function ($query) use($rights)  {
+      ->orWhereHas('roles', function ($query) {
         $query->where('roles.weight' ,'<' , User::find(Auth::id())->roles->max('weight'))
-        ->whereNotIn(
+        ->orWhere('users.id', '=', Auth::id());
+      })
+      ->WhereHas('roles', function ($query) use($rights)  {
+        $query->whereNotIn(
             'role_user.user_id'
             ,$rights !== null ? $rights->users->pluck('id') : [0]
           );
@@ -114,18 +123,18 @@ class OktellController extends Controller
       ->orderBy('users.name','asc')
       ->get(); 
     
-    $data = User::find($id);
-    $roleWeight = $data->roles->max('weight');
-    //$managers = Role::find(2)->users;
 
+    //$managers = Role::find(2)->users;
 
     $managers = User::whereHas('roles', function ($query) {
         $query->whereIn('roles.id' ,[2,1002]);
       })
       ->orderBy('users.name','asc')
       ->get();
+
     $projects = Project::orderBy('name')->get();
-    $profile = Profile::where('user_id',$id)->first();
+    $profile = Profile::where('user_id',$id)->with('city')->first();
+    $cities = City::orderBy('name')->get();
     $userProjects = $data->projects->pluck('id')->toArray();
     $prefix = DB::connection('sqlsrv_srn')
       ->table('logicall.dbo.users')
@@ -136,12 +145,13 @@ class OktellController extends Controller
       ->where('users.id', '=', $id)
       ->select('users.*', 'Prefix')
       ->first();
+
     $userRoleWeight = User::find(Auth::id())->roles->max('weight');
 
     $UsersUnderControl = OktellUserControl::where('UserA',$data->id_user)->select('UserB')->get();
     $UsersUnderControl = $UsersUnderControl->pluck('UserB')->toArray();
 
-    $UsersControl =  OktellUserControl::where('UserB',$data->id_user)->select('UserA')->get();
+    $UsersControl = OktellUserControl::where('UserB',$data->id_user)->select('UserA')->get();
     $UsersControl = $UsersControl->pluck('UserA')->toArray();
 
     return view('users.show',compact([
@@ -155,11 +165,14 @@ class OktellController extends Controller
       'userRoleWeight',
       'users',
       'UsersUnderControl',
-      'UsersControl'
+      'UsersControl',
+      'cities'
     ]));
   }
 
   public function updateUser($id){
+
+     //dd(request('FullName'));
     $user = User::find($id);
     // UserA еонтролирует UserB подчиняется
     $OktellUserAControls = OktellUserControl::where('UserA',$user->id_user)
@@ -179,14 +192,11 @@ class OktellController extends Controller
 
     if(!empty($UsersA)){
       foreach ($UsersA as $UserA) {
-
         //if(!in_array($UserA, $OktellUserBControls)){
           $OktellUserControl = New OktellUserControl;
           $OktellUserControl->UserA = $UserA;
           $OktellUserControl->UserB = $user->id_user;
           $OktellUserControl->save();
-
-
         //}
       }
     }
@@ -200,9 +210,6 @@ class OktellController extends Controller
         //}
       }
     }
-
-
-
     $Profile = Profile::where('user_id', $id)->first();
     $Profile->update(request()->except(['_method','_token','project','UserA','UserB']));
     $Profile->save();
@@ -213,30 +220,32 @@ class OktellController extends Controller
       ->causedBy(auth()->user())
       ->withProperties($log)
       ->log(':causer.name changed sites for :subject.title');
-    activity()
-      ->performedOn($user)
-      ->causedBy(auth()->user())
-      ->performedOn($OktellUserControl)
-      ->withProperties($UsersA)
-      ->log(':causer.name changed UsersA. Old users');
-    activity()
-      ->performedOn($user)
-      ->causedBy(auth()->user())
-      ->performedOn($OktellUserControl)
-      ->withProperties($OktellUserAControls)
-      ->log(':causer.name changed UsersA. New users');
-    activity()
-      ->performedOn($user)
-      ->causedBy(auth()->user())
-      ->performedOn($OktellUserControl)
-      ->withProperties($OktellUserBControls)
-      ->log(':causer.name changed UsersB. Old users');
-    activity()
-      ->performedOn($user)
-      ->causedBy(auth()->user())
-      ->performedOn($OktellUserControl)
-      ->withProperties($UsersB)
-      ->log(':causer.name changed UsersB. New users');
+    if(!empty($OktellUserControl)){
+      activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->performedOn($OktellUserControl)
+        ->withProperties($UsersA)
+        ->log(':causer.name changed UsersA. Old users');
+      activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->performedOn($OktellUserControl)
+        ->withProperties($OktellUserAControls)
+        ->log(':causer.name changed UsersA. New users');
+      activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->performedOn($OktellUserControl)
+        ->withProperties($OktellUserBControls)
+        ->log(':causer.name changed UsersB. Old users');
+      activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->performedOn($OktellUserControl)
+        ->withProperties($UsersB)
+        ->log(':causer.name changed UsersB. New users');
+  }
 
     return redirect()->back();
     

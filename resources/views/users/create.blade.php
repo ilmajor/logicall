@@ -26,7 +26,12 @@
 			<input type="text" class="form-control" id="middleName" name="middleName" required>
 			{{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
 		</div>
-
+		<h3>Кастомный пароль для</h3>
+		<div class="form-group">
+			<label for="password">Пароль</label>
+			<input type="text" class="form-control" id="password" name="password">
+			{{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+		</div>
 
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Создать</button>

@@ -37,6 +37,32 @@
     </a>
   </li>
   <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+    <span>Проекты.</span>
+    <a class="d-flex align-items-center text-muted" href="#"></a>
+  </h6>
+  <li class="nav-item">
+    <a class="nav-link" href="/lk/admin/project">
+      {{-- <span data-feather="users"></span> --}}
+      Редактировать.
+    </a>
+  </li>
+  <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+    <span>Площадки.</span>
+    <a class="d-flex align-items-center text-muted" href="#"></a>
+  </h6>
+  <li class="nav-item">
+    <a class="nav-link" href="/lk/admin/city/create">
+      {{-- <span data-feather="users"></span> --}}
+      Создать.
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/lk/admin/city">
+      {{-- <span data-feather="users"></span> --}}
+      Редактировать.
+    </a>
+  </li>
+  <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
     <span>Роли.</span>
     <a class="d-flex align-items-center text-muted" href="#"></a>
   </h6>

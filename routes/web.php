@@ -85,6 +85,9 @@ Route::get('/admin/DatabaseExclusion/','Admin\DatabaseExclusionController@index'
 Route::get('/admin/DatabaseExclusion/{id}/','Admin\DatabaseExclusionController@show')->name('admnDatabaseExclusion');
 Route::post('/admin/DatabaseExclusion/{id}/','Admin\DatabaseExclusionController@update');
 #project
+Route::get('/admin/project/','Admin\ProjectController@index');
+Route::get('/admin/project/{id}','Admin\ProjectController@show');
+Route::post('/admin/project/{id}','Admin\ProjectController@update');
 #SberBank LE
 Route::get('/admin/project/sberbank/tecos/create','Admin\project\sberbankLE\TecosController@create')
 	->name('adminProjectSberbankTecosCreate');
@@ -93,7 +96,14 @@ Route::get('/admin/project/sberbank/tecos','Admin\project\sberbankLE\TecosContro
 Route::get('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@show');
 Route::post('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@update');
 Route::delete('/admin/project/sberbank/tecos/{id}','Admin\project\sberbankLE\TecosController@destroy');
-
+#City
+Route::get('/admin/city/create','Admin\CityController@create')
+	->name('adminCityCreate');
+Route::post('/admin/city/create','Admin\CityController@store');
+Route::get('/admin/city','Admin\CityController@index');
+Route::get('/admin/city/{id}','Admin\CityController@show');
+Route::post('/admin/city/{id}','Admin\CityController@update');
+Route::delete('/admin/city/{id}','Admin\CityController@destroy');
 
 
 

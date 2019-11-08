@@ -7,7 +7,7 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">Логин: <span>{{ $profile->Rate }}</span></li>
         <li class="list-group-item d-flex justify-content-between align-items-center">График: <span>{{ $profile->Schedule }}</span></li>
         <li class="list-group-item d-flex justify-content-between align-items-center">Дата трудоустройства: <span>{{ $profile->EmploymentDate }}</span></li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Прощадка: <span>{{ $profile->City }}</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Площадка: <span>{{ $profile->City }}</span></li>
         <li class="list-group-item d-flex justify-content-between align-items-center">Должность: <span>{{ $profile->Position }}</span></li>
         <li class="list-group-item d-flex justify-content-between align-items-center">Закрепленный коуч: <span>{{ $profile->PinnedCoach }}</span></li>
         <li class="list-group-item d-flex justify-content-between align-items-center">Коуч по ОС: <span>{{ $profile->OSCoach }}</span></li>
