@@ -42,8 +42,11 @@ class ProjectController extends Controller
 	public static function update($id)
 	{
 		$project = Project::find($id);
+		
 		$project->update(request()->except(['_method','_token']));
+		$project->is_enabled = request()->input('is_enabled');
 		$project->save();
+
 		return redirect()->back();
 	}
 

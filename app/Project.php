@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
-        'director'
+        'director',
+        'is_enabled'
     ];
 	public function task()
 	{

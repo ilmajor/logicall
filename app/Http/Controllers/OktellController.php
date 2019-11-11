@@ -37,18 +37,20 @@ class OktellController extends Controller
     $Surname = trim(request('Surname'));
     $Name = trim(request('Name'));
     $middleName = trim(request('middleName'));
+    $password = trim(request('password'));
+
     $fio = $Surname.' '.$Name.' '.$middleName;
     $login = $Surname.mb_substr($Name,0,1,"UTF-8").mb_substr($middleName,0,1,"UTF-8");
     $idUser = collect(\DB::connection('sqlsrv_srn')->select('select NEWID() as id'))->first();
-    $password = trim(request('password'));
-
     $password = !empty($password) ? $password : $login;
+    $password = mb_strtoupper(md5(mb_convert_encoding($password,'cp1251')));
+    #dd($password);
     $user = User::create([
       'name' => $fio,
       'login' => $login,
-      'password' => mb_strtoupper(md5(mb_convert_encoding($password,'cp1251'))),
+      'password' => $password,
       'id_user' => $idUser->id,
-    ]);*/
+    ]);
 
     $user
     ->roles()
@@ -58,8 +60,10 @@ class OktellController extends Controller
       'user_id' => $user->id,
       'FullName' => $user->name,
     ]);
+
+
     $data = DB::connection('oktell')->select("
-      exec [oktell].[dbo].[usp_create_user] 
+      exec [oktell].[dbo].[usp_create_user_v2] 
       :name
       , :login
       , :idUser
