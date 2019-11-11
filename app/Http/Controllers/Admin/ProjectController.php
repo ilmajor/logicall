@@ -30,7 +30,7 @@ class ProjectController extends Controller
 		->orderBy('users.name','asc')
 		->get();
 		
-		$project = Project::find($id)->first();
+		$project = Project::find($id);
 
 
 		return view('admin.project.show',compact(
