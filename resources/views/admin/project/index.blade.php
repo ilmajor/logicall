@@ -9,6 +9,12 @@
           @foreach ($project as $values )
               <tr>
                 <td>{{ $values->name}}</td>
+                    @if($values->is_enabled == true)
+                      <td><span class="badge badge-success badge-pill">Активен</span></td>
+                    @else
+                      <td><span class="badge badge-primary badge-pill">Завершен</span></td>
+                    @endif
+
                 <td><a href="/lk/admin/project/{{ $values->id }}" class="btn btn-warning">Редактировать</a></td>
               </tr>
           @endforeach
