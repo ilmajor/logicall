@@ -13,6 +13,7 @@ use App\Project;
 use App\OktellUserControl;
 use Illuminate\Support\Facades\Auth;
 use App\City;
+use App\ContractingOrganization;
 
 class OktellController extends Controller
 {
@@ -158,6 +159,7 @@ class OktellController extends Controller
     $UsersControl = OktellUserControl::where('UserB',$data->id_user)->select('UserA')->get();
     $UsersControl = $UsersControl->pluck('UserA')->toArray();
 
+    $ContractingOrganizations = ContractingOrganization::orderBy('name')->get();
     return view('users.show',compact([
       'profile',
       'data',
@@ -170,7 +172,8 @@ class OktellController extends Controller
       'users',
       'UsersUnderControl',
       'UsersControl',
-      'cities'
+      'cities',
+      'ContractingOrganizations'
     ]));
   }
 

@@ -172,6 +172,19 @@
                 <label for="MobilePhone">Мобильный телефон.</label>
                 <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" aria-describedby="MobilePhone" value="{{ $profile->MobilePhone }}">
             </div>
+            <div class="form-group">
+                <label for="ContractingOrganization">Подрядная организация.</label>
+                <select class="form-control form-control" id="ContractingOrganization" name="ContractingOrganization" aria-describedby="ContractingOrganization">
+                    <option value=""></option>
+                    @foreach($ContractingOrganizations as $ContractingOrganization)
+                        @if((!empty($ContractingOrganization)) && ((int) $profile->ContractingOrganization == $ContractingOrganization->id))
+                            <option value="{{$ContractingOrganization->id}}" selected>{{$ContractingOrganization->name}}</option>
+                        @else 
+                            <option value="{{$ContractingOrganization->id}}">{{$ContractingOrganization->name}}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
 
             <hr>
             <h3>Права контроля.</h3>

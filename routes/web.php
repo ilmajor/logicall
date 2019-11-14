@@ -104,6 +104,14 @@ Route::get('/admin/city','Admin\CityController@index');
 Route::get('/admin/city/{id}','Admin\CityController@show');
 Route::post('/admin/city/{id}','Admin\CityController@update');
 Route::delete('/admin/city/{id}','Admin\CityController@destroy');
+#ContractingOrganization
+Route::get('/admin/ContractingOrganization/create','Admin\ContractingOrganizationController@create')
+	->name('adminCityCreate');
+Route::post('/admin/ContractingOrganization/create','Admin\ContractingOrganizationController@store');
+Route::get('/admin/ContractingOrganization','Admin\ContractingOrganizationController@index');
+Route::get('/admin/ContractingOrganization/{id}','Admin\ContractingOrganizationController@show');
+Route::post('/admin/ContractingOrganization/{id}','Admin\ContractingOrganizationController@update');
+Route::delete('/admin/ContractingOrganization/{id}','Admin\ContractingOrganizationController@destroy');
 
 
 
