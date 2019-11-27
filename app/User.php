@@ -44,6 +44,11 @@ class User extends Authenticatable
       return $this->belongsToMany(Role::class)->withTimestamps();
     }
 
+    public function maxWeightRole()
+    {
+      return $this->belongsToMany(Role::class)->orderBy('weight','desc');
+    }
+
     /**
     * @param string|array $roles
     */
@@ -94,6 +99,38 @@ class User extends Authenticatable
     public function projects()
     {
       return $this->belongsToMany(Project::class)->withTimestamps();
+    }
+
+    public function hasProject($project)
+    {
+        if ($this->projects()->where('project_id', $project)->first()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function hasAnyProject($projects)
+    {
+        if (is_array($projects)) {
+            foreach ($projects as $project) {
+                if ($this->hasProject($project)) {
+                    return true;
+                }
+            }
+        } else {
+            if ($this->hasProject($projects)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function authorizeProjects($projects)
+    {
+        if ($this->hasAnyProject($projects)) {
+            return true;
+        }
+        abort(401, 'Ограничение по проектам.');
     }
 
     public function OktellUserControls()

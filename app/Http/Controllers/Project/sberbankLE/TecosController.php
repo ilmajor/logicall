@@ -9,6 +9,7 @@ use App\project\sberbankLE\TecosLogStart;
 use App\project\sberbankLE\TecosLogStop;
 use App\Task;
 use App\User;
+use App\Project;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -18,24 +19,29 @@ class TecosController extends Controller
 {
     public function __construct()
     {
-      $this->middleware('auth');
-      $this->middleware('AuthManager');
+      #$this->middleware('auth');
+      #$this->middleware('AuthManager');
     }
 
     public function index(){
-    	$tasks = Tecos::Join('tasks','tasks.uuid','=','Tecos.uuid')
-    		->get();
+
+        $tecos = Tecos::with('task.project')->get();
+        #$this->authorize('access', Tecos::with('task.project')->get()->pluck('task.project'));
+
+        //$tecos = Tecos::with('task')->get();
+    	//$tasks = Tecos::Join('tasks','tasks.uuid','=','Tecos.uuid')
+    	//	->get();
     	
 		return view('project.sberbankLE.index',compact([
-			'tasks',
+			'tecos'
 		]));
     }
-    public function show($id){
-    	$task = Task::find($id);
-    	
+    public function show(Task $task){
+    	#$task = Task::find($id);
+    	$this->authorize('access', $task->project);
     	$tecos = Tecos::where('uuid','=',$task->uuid)
     		->first();
-
+        
     	$baseSize = DB::connection('oktell')
             ->table($tecos->task_table)
     		->leftJoin($tecos->task_table_daily,$tecos->task_table_daily.'.id','=', $tecos->task_table.'.id')
@@ -48,16 +54,16 @@ class TecosController extends Controller
     		->groupBy($tecos->task_table.'.ID_CAMPAIGN',$tecos->task_table.'.insertdatetime')
     		->orderBy(DB::raw('cast('.$tecos->task_table.'.insertdatetime as date)'))
     		->get();
-
+            
 		return view('project.sberbankLE.task',compact([
 			'baseSize',
 			'task',
 		]));
     }
 
-    public function start($id, $id_campaign, $date){
+    public function start(Task $task, $id_campaign, $date){
         $user = User::find(Auth::id());
-        $task = Task::find($id);
+        
         $tecos = Tecos::where('uuid','=',$task->uuid)
             ->first();
 
@@ -106,9 +112,9 @@ class TecosController extends Controller
         return redirect()->back();
     }
 
-    public function stopTemporarily($id, $id_campaign, $date){
+    public function stopTemporarily(Task $task, $id_campaign, $date){
         $user = User::find(Auth::id());
-        $task = Task::find($id);
+
         $tecos = Tecos::where('uuid','=',$task->uuid)
             ->first();
 
@@ -130,9 +136,9 @@ class TecosController extends Controller
         return redirect()->back();
     }
 
-    public function stopForever($id, $id_campaign, $date){
+    public function stopForever(Task $task, $id_campaign, $date){
         $user = User::find(Auth::id());
-        $task = Task::find($id);
+
         $tecos = Tecos::where('uuid','=',$task->uuid)
             ->first();
 

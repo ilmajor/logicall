@@ -10,8 +10,8 @@ class ProjectController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth');
-		$this->middleware('AuthAdmin');
+		#$this->middleware('auth');
+		#$this->middleware('AuthAdmin');
 	}
 
 	public static function index()
@@ -22,16 +22,13 @@ class ProjectController extends Controller
 		]));
 	}
 
-	public static function show($id)
+	public static function show(Project $project)
 	{
 		$managers = User::whereHas('roles', function ($query) {
 				$query->whereIn('roles.id' ,[2]);
 			})
 		->orderBy('users.name','asc')
 		->get();
-		
-		$project = Project::find($id);
-
 
 		return view('admin.project.show',compact(
 			'project'
@@ -39,10 +36,8 @@ class ProjectController extends Controller
 		));
 	}
 
-	public static function update($id)
+	public static function update(Project $project)
 	{
-		$project = Project::find($id);
-		
 		$project->update(request()->except(['_method','_token']));
 		$project->is_enabled = request()->input('is_enabled');
 		$project->save();

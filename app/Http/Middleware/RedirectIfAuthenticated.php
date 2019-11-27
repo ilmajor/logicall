@@ -21,12 +21,7 @@ class RedirectIfAuthenticated
             //dd($guard);
             return redirect('/home');
         }
-        if (Auth::guard($guard)->check()) {
-            return redirect('/userId');
-        }
-        if (Auth::guard($guard)->check()) {
-            return redirect('/statisticsId');
-        }
+
 
         return $next($request);
     }

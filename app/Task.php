@@ -5,6 +5,8 @@ namespace App;
 
 class Task extends Model
 {
+    protected $primaryKey = 'id';
+
     public function settings()
     {
     	return $this->hasOne(OktellSetting::class,'idtask','uuid');

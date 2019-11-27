@@ -1,7 +1,7 @@
 @extends ('admin.layouts.master')
 @section('content')
 	
-<h1>Пользователь {{ $ContractingOrganization->name }}.</h1>
+<h1>Подрядная организация {{ $ContractingOrganization->name }}.</h1>
 <hr>
 
 <div class="table-responsive">

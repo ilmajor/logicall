@@ -12,8 +12,8 @@ class ContractingOrganizationController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth');
-		$this->middleware('AuthAdmin');
+		#$this->middleware('auth');
+		#$this->middleware('AuthAdmin');
 	}
 	public static function index()
 	{
@@ -23,17 +23,15 @@ class ContractingOrganizationController extends Controller
 		]));
 	}
 
-	public static function show($id)
+	public static function show(ContractingOrganization $ContractingOrganization)
 	{
-		$ContractingOrganization = ContractingOrganization::find($id)->first();
 		return view('admin.ContractingOrganization.show',compact(
 			'ContractingOrganization'
 		));
 	}
 
-	public static function update($id)
+	public static function update(ContractingOrganization $ContractingOrganization)
 	{
-		$ContractingOrganization = ContractingOrganization::find($id);
 		$ContractingOrganization->update(request()->except(['_method','_token']));
 		$ContractingOrganization->save();
 		return redirect()->back();
@@ -57,8 +55,8 @@ class ContractingOrganizationController extends Controller
 		
 	}
 
-	public function destroy($id){
-		ContractingOrganization::find($id)->delete();
+	public function destroy(ContractingOrganization $ContractingOrganization){
+		$ContractingOrganization->delete();
 		return redirect()->back();
 	}
 }

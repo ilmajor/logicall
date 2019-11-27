@@ -9,8 +9,8 @@ class RolesController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth');
-		$this->middleware('AuthAdmin');
+		#$this->middleware('auth');
+		#$this->middleware('AuthAdmin');
 	}
 
 	public static function index()
@@ -18,16 +18,14 @@ class RolesController extends Controller
 		$Roles = Role::orderBy('name')->get();
 		return view('admin.role.index',compact('Roles'));
 	}
-	public static function show($id)
+	public static function show(Role $role)
 	{
-		$role = Role::find($id);
 		return view('admin.role.show',compact(
 			'role'
 		));
 	}
-	public static function update($id)
+	public static function update(Role $role)
 	{
-	    $role = Role::find($id);
 	    $role->update(request()->except(['_method','_token']));
 	    $role->save();
 	    return redirect()->back();
@@ -50,8 +48,8 @@ class RolesController extends Controller
 		]);
 		return redirect()->back();
 	}
-	public function destroy($id){
-		Role::find($id)->delete();
+	public function destroy(Role $role){
+		$role->delete();
 		return redirect()->back();
 	}
 }

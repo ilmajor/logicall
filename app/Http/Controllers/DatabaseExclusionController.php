@@ -15,8 +15,8 @@ class DatabaseExclusionController extends Controller
 {
     public function __construct()
     {
-      $this->middleware('auth');
-      $this->middleware('AuthManager');
+      #$this->middleware('auth');
+      #$this->middleware('AuthManager');
     }
 
 	public static function index()
@@ -34,12 +34,10 @@ class DatabaseExclusionController extends Controller
 		return view('DatabaseExclusion.index',compact('tasks'));
 	}
 
-	public static function show($id)
+	public function show(Task $task)
 	{
-
-		$task = Task::find($id);
-
-		$DatabaseExclusions = DatabaseExclusion::where('task_id',$id)->get();
+		$this->authorize('access', $task->project);
+		$DatabaseExclusions = DatabaseExclusion::where('task_id',$task->id)->get();
 		foreach ($DatabaseExclusions as $DatabaseExclusion) {
 			
 			$Exclusion = DB::table($task->task_table)
@@ -90,9 +88,9 @@ class DatabaseExclusionController extends Controller
 		));
 	}
 
-	public function exclusion($id)
+	public function exclusion(Task $task)
 	{
-
+		$this->authorize('access', $task->project);
 		/*      
 			$this->validate(request(),[
 			'waitcall_min' => 'required',
@@ -105,8 +103,7 @@ class DatabaseExclusionController extends Controller
 			'StartHour' => 'required' 
 			]);
 		*/
-		$task = Task::find($id);
-
+		
 		//$DatabaseExclusions = DatabaseExclusion::where('task_id',$id)->get();
 		$request = request()->except(['_method','_token']);
 
@@ -128,11 +125,9 @@ class DatabaseExclusionController extends Controller
 		return redirect()->back();
 	}
 
-	public function inclusion($id)
+	public function inclusion($task)
 	{
-
-		$task = Task::find($id);
-
+		$this->authorize('access', $task->project);
 		$request = request()->except(['_method','_token']);
 
 		$query = DB::connection('oktell')

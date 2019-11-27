@@ -9,8 +9,8 @@ class RegistrationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('AuthManager');
+        #$this->middleware('auth');
+        #$this->middleware('AuthManager');
     }
     public function create()
     {

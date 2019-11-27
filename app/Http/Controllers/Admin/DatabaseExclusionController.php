@@ -21,8 +21,8 @@ class DatabaseExclusionController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth');
-		$this->middleware('AuthAdmin');
+		#$this->middleware('auth');
+		#$this->middleware('AuthAdmin');
 	}
 
 	public static function index()
@@ -35,11 +35,9 @@ class DatabaseExclusionController extends Controller
 		return view('admin.DatabaseExclusion.index',compact('Tasks'));
 	}
 
-	public static function show($id)
+	public static function show(Task $task)
 	{
-
-		$task = Task::find($id);
-		$DatabaseExclusions = DatabaseExclusion::where('task_id',$id)->get();
+		$DatabaseExclusions = DatabaseExclusion::where('task_id',$task->id)->get();
 
 		$columns = DB::connection('oktell')
 			->getSchemaBuilder()
@@ -52,7 +50,7 @@ class DatabaseExclusionController extends Controller
 		));
 	}
 
-	public function update($id)
+	public function update(Task $task)
 	{
 		
 		$this->validate(request(),[
@@ -61,19 +59,17 @@ class DatabaseExclusionController extends Controller
 
 		$columns = request()->input('column');
 
-		$DatabaseExclusions = DatabaseExclusion::where('task_id',$id)->get();
+		$DatabaseExclusions = DatabaseExclusion::where('task_id',$task->id)->get();
 
-		DatabaseExclusion::where('task_id',$id)
+		DatabaseExclusion::where('task_id',$task->id)
 			->whereNotIn('exclusion_column',request()->input('column'))
 			->delete();
-
-		$Task = Task::find($id);
 		
 		foreach($columns as $column) {
 			if((!empty($column)) && !in_array($column, $DatabaseExclusions->pluck('exclusion_column')->toArray()))
 			{
 				$Task->databaseExclusion()->create([
-					'task_id' => $id,
+					'task_id' => $task->id,
 					'exclusion_column' => $column
 
 				]);

@@ -18,7 +18,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for="weight">Описание.</label>
+				<label for="weight">Вес.</label>
 				<input type="text" class="form-control" id="weight" name="weight" aria-describedby="weight" value="{{ $role->weight }}">
 			</div>
 			

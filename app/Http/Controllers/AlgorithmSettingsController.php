@@ -14,11 +14,11 @@ class AlgorithmSettingsController extends Controller
 {
     public function __construct()
     {
-      $this->middleware('auth');
-      $this->middleware('AuthManager');
+      #$this->middleware('auth');
+      #$this->middleware('AuthManager');
     }
 
-    public function task()
+    public function index()
     {
 
       $tasks = Task::with('project')
@@ -35,12 +35,13 @@ class AlgorithmSettingsController extends Controller
       );
     }
 
-   public function index($id)
-   {
-      $task = Task::find($id);
+    public function show(Task $task)
+    {
+
+      $this->authorize('access', $task->project);
       
       $settings = OktellSetting::where('idtask',$task->uuid)->first();
-      
+
       $queue = DB::connection('sqlsrv_srn')
         ->table("oktell.dbo.udf_go_from_queue_callout_from_dialing ('$task->uuid')")
         ->first();
@@ -51,10 +52,10 @@ class AlgorithmSettingsController extends Controller
           if($task->is_taskid == 1){
             $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent')
               ->on($task->task_abonent.'.TaskId','=',$task->task_phone.'.TaskId');
-          }
-          else {
-            $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent');
-          }
+            }
+            else {
+              $join->on($task->task_abonent.'.id_abonent','=', $task->task_phone.'.id_abonent');
+            }
         })
         ->where($task->task_abonent.'.in_work', '=', 'NO')
         ->whereNotIn($task->task_abonent.'.status',[50])
@@ -66,20 +67,19 @@ class AlgorithmSettingsController extends Controller
         })
         ->where(function($query)use($date){
           $query->where('date_last_changes','<',$date )
-            ->orWhereNull('date_last_changes');
+          ->orWhereNull('date_last_changes');
         })
         ->where(function($query) use($task,$settings){
           $query->whereNull($task->task_abonent.'.TIMEDIFF')
             ->orWhereBetween(
-              DB::raw('TIMEDIFF + datepart(hh,getdate())')
-              ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
-            );
+            DB::raw('TIMEDIFF + datepart(hh,getdate())')
+            ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
+          );
         })
         ->where(function($query) use($task){
           if($task->is_taskid == 1){
             $query->where($task->task_abonent.'.TaskId','=',$task->uuid);
           }
-            
         })
         ->selectRaw('count(*) as selection,( select count(*) as cc  from '.$task->task_table.') as base')
         ->first();
@@ -105,34 +105,35 @@ class AlgorithmSettingsController extends Controller
         })
         ->where(function($query)use($date){
           $query->where('date_last_changes','<',$date)
-            ->orWhereNull('date_last_changes');
+          ->orWhereNull('date_last_changes');
         })
         ->where(function($query) use($task,$settings){
           $query->whereNull($task->task_abonent.'.TIMEDIFF')
             ->orWhereBetween(
-              DB::raw('TIMEDIFF + datepart(hh,DATEADD (HOUR,'.$settings->StartHour.',cast(DATEADD(d,1,cast(getdate() as date))as datetime)))')
-              ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
-            );
+            DB::raw('TIMEDIFF + datepart(hh,DATEADD (HOUR,'.$settings->StartHour.',cast(DATEADD(d,1,cast(getdate() as date))as datetime)))')
+            ,[$settings->MinClientTimeCalls,$settings->MaxClientTimeCalls]
+          );
         })
         ->where(function($query) use($task){
           if($task->is_taskid == 1){
-            $query->where($task->task_abonent.'.TaskId','=',$task->uuid);
-          }
-            
+          $query->where($task->task_abonent.'.TaskId','=',$task->uuid);
+        }
         })
         ->selectRaw('count(*) as selection')
         ->first();
+      
 
       return view('algorithmSettings.index',compact([
-         'task',
-         'baseData',
-         'queue',
-         'settings',
-         'baseDataTomorrow'
-         ])
-      );
-   }
-   public function update($id)
+        'task',
+        'baseData',
+        'queue',
+        'settings',
+        'baseDataTomorrow'
+      ]));
+    }
+
+
+   public function update(Task $task)
    {
 
       $this->validate(request(),[
@@ -146,7 +147,7 @@ class AlgorithmSettingsController extends Controller
         'StartHour' => 'required' 
       ]);
 
-      $task = Task::find($id)->settings;
+      $task = $task->settings;
 
       $task->update(request()->except(['_method','_token']));
       $task->save();

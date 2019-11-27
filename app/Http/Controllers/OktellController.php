@@ -20,8 +20,8 @@ class OktellController extends Controller
 
   public function __construct()
   {
-    $this->middleware('auth');
-    $this->middleware('AuthManager');
+    #$this->middleware('auth');
+    #$this->middleware('AuthManager');
   }
   public function createUser()
   {
@@ -76,9 +76,10 @@ class OktellController extends Controller
       'password' => $password
     ]);
 
-    return view('users.create',compact([
+    return redirect()->route('user', ['id' => $user->id]);
+/*    return view('users.create',compact([
       'data'
-    ]));
+    ]));*/
   }
 
   public function indexUser()
@@ -102,14 +103,19 @@ class OktellController extends Controller
     return view('users.index',compact('users'));
   }
 
-  public function showUser($id)
+  public function showUser(User $user)
   {
+    
+    #dd(Auth::user()->roles->max('weight') <= $user->roles->max('weight'));
+    #dd($user->roles->pluck('id'));
+    #dd(Role::whereIn('id',$user->roles->pluck('id'))->get()->pluck('id'));
+
+    $this->authorize('role',$user->roles()->orderBy('weight','desc')->first());
     $rights = Role::where('weight','>',User::find(Auth::id())->roles->max('weight'))
       ->with('users')
       ->first();
-    $data = User::find($id);
 
-    $roleWeight = $data->roles->max('weight');
+    $roleWeight = $user->roles->max('weight');
     $users = User::join('oktell.dbo.A_users', function ($join) {
         $join->on('users.id_user', '=', 'A_users.id');
       })
@@ -124,12 +130,10 @@ class OktellController extends Controller
           );
       })
       ->where('IsDeleted',0)
-      ->where('users.id','!=',$id)
+      ->where('users.id','!=',$user->id)
       ->orderBy('users.name','asc')
       ->get(); 
     
-
-    //$managers = Role::find(2)->users;
 
     $managers = User::whereHas('roles', function ($query) {
         $query->whereIn('roles.id' ,[2,1002]);
@@ -138,31 +142,31 @@ class OktellController extends Controller
       ->get();
 
     $projects = Project::orderBy('name')->get();
-    $profile = Profile::where('user_id',$id)->with('city')->first();
+    $profile = Profile::where('user_id',$user->id)->with('city')->first();
     $cities = City::orderBy('name')->get();
-    $userProjects = $data->projects->pluck('id')->toArray();
+    $userProjects = $user->projects->pluck('id')->toArray();
     $prefix = DB::connection('sqlsrv_srn')
       ->table('logicall.dbo.users')
       ->leftJoin('oktell.dbo.A_RuleRecords', 'A_RuleRecords.ReactID', '=', 'users.id_user')
       ->leftJoin('oktell.dbo.A_Rules', 'A_Rules.ID', '=', 'A_RuleRecords.RuleID')
       ->leftJoin('oktell.dbo.A_NumberPlanAction', 'A_NumberPlanAction.ExtraID', '=', 'A_Rules.ID')
       ->leftJoin('oktell.dbo.A_NumberPlan', 'A_NumberPlan.ID', '=', 'A_NumberPlanAction.NumID')
-      ->where('users.id', '=', $id)
+      ->where('users.id', '=', $user->id)
       ->select('users.*', 'Prefix')
       ->first();
 
     $userRoleWeight = User::find(Auth::id())->roles->max('weight');
 
-    $UsersUnderControl = OktellUserControl::where('UserA',$data->id_user)->select('UserB')->get();
+    $UsersUnderControl = OktellUserControl::where('UserA',$user->id_user)->select('UserB')->get();
     $UsersUnderControl = $UsersUnderControl->pluck('UserB')->toArray();
 
-    $UsersControl = OktellUserControl::where('UserB',$data->id_user)->select('UserA')->get();
+    $UsersControl = OktellUserControl::where('UserB',$user->id_user)->select('UserA')->get();
     $UsersControl = $UsersControl->pluck('UserA')->toArray();
 
     $ContractingOrganizations = ContractingOrganization::orderBy('name')->get();
     return view('users.show',compact([
       'profile',
-      'data',
+      'user',
       'projects',
       'managers',
       'prefix',
@@ -177,10 +181,10 @@ class OktellController extends Controller
     ]));
   }
 
-  public function updateUser($id){
+  public function updateUser(User $user){
 
      //dd(request('FullName'));
-    $user = User::find($id);
+    
     // UserA еонтролирует UserB подчиняется
     $OktellUserAControls = OktellUserControl::where('UserA',$user->id_user)
       ->get();
@@ -217,7 +221,7 @@ class OktellController extends Controller
         //}
       }
     }
-    $Profile = Profile::where('user_id', $id)->first();
+    $Profile = Profile::where('user_id', $user->id)->first();
     $Profile->update(request()->except(['_method','_token','project','UserA','UserB']));
     $Profile->save();
     

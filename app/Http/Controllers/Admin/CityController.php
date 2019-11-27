@@ -12,8 +12,8 @@ class CityController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('auth');
-		$this->middleware('AuthAdmin');
+		#$this->middleware('auth');
+		#$this->middleware('AuthAdmin');
 	}
 	public static function index()
 	{
@@ -24,23 +24,22 @@ class CityController extends Controller
 		]));
 	}
 
-	public static function show($id)
+	public static function show(City $city)
 	{
-		$city = City::find($id)->first();
 		$managers = User::whereHas('roles', function ($query) {
 				$query->whereIn('roles.id' ,[2]);
 			})
 		->orderBy('users.name','asc')
 		->get();
+		
 		return view('admin.city.show',compact(
 			'city',
 			'managers'
 		));
 	}
 
-	public static function update($id)
+	public static function update(City $city)
 	{
-		$city = City::find($id);
 		$city->update(request()->except(['_method','_token']));
 		$city->save();
 		return redirect()->back();
@@ -74,8 +73,8 @@ class CityController extends Controller
 		
 	}
 
-	public function destroy($id){
-		City::find($id)->delete();
+	public function destroy(City $city){
+		$city->delete();
 		return redirect()->back();
 	}
 	

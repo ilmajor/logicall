@@ -15,8 +15,8 @@ class SectionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth');
-    $this->middleware('AuthAdmin');
+    #$this->middleware('auth');
+    #$this->middleware('AuthAdmin');
   }
 
   public function index()
@@ -29,17 +29,18 @@ class SectionController extends Controller
     ]));
   }
 
-  public function show($id)
+  public function show(Section $section)
   {
+
     $roles = Role::get();
 
     $projects = Project::orderBy('name')->get();
 
-    $section = Section::with('role')
+    $section = $section
+      ->with('role')
       ->with('projects')
-      ->where('id', $id)
       ->first();
-    
+      
     return view('admin.section.show',compact([
     	'section'
       ,'roles'
@@ -66,7 +67,6 @@ class SectionController extends Controller
       'description' => 'required',
       'url' => 'required|min:3',
       'role' => 'required',
-
     ]);
 
     $section = Section::create([
@@ -80,10 +80,10 @@ class SectionController extends Controller
     $section->projects()->sync(request()->input('project'));
 
     $section->save();
-    return redirect()->back();
+    return redirect()->route('adminSections');
   }
 
-  public function update($id){
+  public function update(Section $section){
     
     $this->validate(request(),[
       'title' => 'required|min:3',
@@ -92,13 +92,12 @@ class SectionController extends Controller
       //'role' => 'required'
     ]);
     //dd(request()->input('role'));
-    $Section = Section::find($id);
-    $Section->update(request()->except(['_method','_token','project','role']));
+    $section->update(request()->except(['_method','_token','project','role']));
     
     //dd(request()->input('role'));
-    $Section->role()->sync(request()->input('role'));
+    $section->role()->sync(request()->input('role'));
 
-    $Section->projects()->sync(request()->input('project'));
+    $section->projects()->sync(request()->input('project'));
     //$Section->save();
 /*    if (empty(request()->input('role'))) {
         $logRole = $Section->role()->detach();
@@ -125,11 +124,11 @@ class SectionController extends Controller
         ->withProperties($logRole)
         ->log(':causer.name changed sites for :subject.title');*/
 
-    return redirect()->route('sections');
+    return redirect()->route('adminSections');
   }
   
-  public function destroy($id){
-    Section::find($id)->delete();
+  public function destroy(Section $section){
+    $section->delete();
     return redirect()->back();
   }
 }

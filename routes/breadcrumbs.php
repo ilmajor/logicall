@@ -23,9 +23,9 @@ Breadcrumbs::for('userId', function ($trail) {
 });
 
 // Home > projectSberbankIndividualsController
-Breadcrumbs::for('projectSberbankIndividualsController', function ($trail) {
+Breadcrumbs::for('projectSberbankIndividuals', function ($trail) {
     $trail->parent('home');
-    $trail->push('Претензии по Follow-Up', route('projectSberbankIndividualsController'));
+    $trail->push('Претензии по Follow-Up', route('projectSberbankIndividuals'));
 });
 
 // Home > DatabaseExclusion
@@ -35,8 +35,7 @@ Breadcrumbs::for('DatabaseExclusions', function ($trail) {
 });
 
 // Home > DatabaseExclusion > [DatabaseExclusion]
-Breadcrumbs::for('DatabaseExclusion', function ($trail, $id) {
-    $Task = App\Task::findOrFail($id);
+Breadcrumbs::for('DatabaseExclusion', function ($trail, $Task) {
     $trail->parent('DatabaseExclusions');
     $trail->push($Task->name, route('DatabaseExclusion', $Task->id));
 });
@@ -48,8 +47,7 @@ Breadcrumbs::for('tecos', function ($trail) {
 });
 
 // Home > algorithmSettings > [algorithmSetting]
-Breadcrumbs::for('tecosShow', function ($trail, $id) {
-    $Task = App\Task::findOrFail($id);
+Breadcrumbs::for('tecosShow', function ($trail, $Task) {
     $trail->parent('tecos');
     $trail->push($Task->name, route('tecosShow', $Task->id));
 });
@@ -79,8 +77,8 @@ Breadcrumbs::for('algorithmSettings', function ($trail) {
 });
 
 // Home > algorithmSettings > [algorithmSetting]
-Breadcrumbs::for('algorithmSetting', function ($trail, $id) {
-	$Task = App\Task::findOrFail($id);
+Breadcrumbs::for('algorithmSetting', function ($trail, $Task) {
+	
     $trail->parent('algorithmSettings');
     $trail->push($Task->name, route('algorithmSetting', $Task->id));
 });
@@ -92,8 +90,7 @@ Breadcrumbs::for('users', function ($trail) {
 });
 
 // Home > users
-Breadcrumbs::for('user', function ($trail, $id) {
-	$User = App\User::findOrFail($id);
+Breadcrumbs::for('user', function ($trail, $User) {
     $trail->parent('users');
     $trail->push($User->name, route('user', $User->id));
 });

@@ -46,12 +46,13 @@ class Kernel extends HttpKernel
     /**
      * The application's route middleware.
      *
-     * These middleware may be assigned to groups or used individually.
+ * These middleware may be assigned to groups or used individually.
      *
      * @var array
      */
     protected $routeMiddleware = [
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+
         //'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
@@ -59,6 +60,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'AuthAdmin' => \App\Http\Middleware\AuthAdminMiddleware::class,
         'AuthManager' => \App\Http\Middleware\AuthManagerMiddleware::class,
-
+        
+        'OktellProject' => \App\Http\Middleware\OktellProjectMiddleware::class,
     ];
 }
