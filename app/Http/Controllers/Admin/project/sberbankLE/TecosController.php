@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin\project\sberbankLE;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\project\sberbankLE\Tecos;
-Use App\Task;
+use App\Models\project\sberbankLE\Tecos;
+Use App\Models\Task;
 
 class TecosController extends Controller
 {

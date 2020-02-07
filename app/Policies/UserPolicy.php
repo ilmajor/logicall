@@ -2,8 +2,7 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Role;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -19,9 +18,8 @@ class UserPolicy
     {
         //
     }
-    public function role(User $user,Role $role)
+    public function profileAccess(User $authUser, $accessUser)
     {
-        dd($role);
-        return $user->roles->max('weight') <= $role->max('weight');
+        return $accessUser->roles->max('weight') < $authUser->roles->max('weight') || $authUser->id == $accessUser->id;
     }
 }

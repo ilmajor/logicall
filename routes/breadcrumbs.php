@@ -40,6 +40,43 @@ Breadcrumbs::for('DatabaseExclusion', function ($trail, $Task) {
     $trail->push($Task->name, route('DatabaseExclusion', $Task->id));
 });
 
+// Home > DatabaseExclusion
+Breadcrumbs::for('tasksCompletionCodes', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Коды завершения', route('tasksCompletionCodes'));
+});
+
+// Home > DatabaseExclusion > [DatabaseExclusion]
+Breadcrumbs::for('CompletionCodes', function ($trail, $Task) {
+    $trail->parent('tasksCompletionCodes');
+    $trail->push($Task->name, route('CompletionCodes', $Task->id));
+});
+
+// Home > DatabaseExclusion > [DatabaseExclusion]
+Breadcrumbs::for('CompletionCode', function ($trail, $Task, $CompletionCode) {
+    
+    $trail->parent('CompletionCodes',$Task);
+    $trail->push(App\Models\CompletionCode::getCompletionCode($Task->uuid,$CompletionCode)->Name);
+
+});
+// Home > DatabaseExclusion > [DatabaseExclusion]
+Breadcrumbs::for('CreateCompletionCodes', function ($trail, $Task) {
+    
+    $trail->parent('tasksCompletionCodes');
+    $trail->push($Task->name, route('CreateCompletionCodes', $Task->id));
+});
+Breadcrumbs::for('storeCompletionCodes', function ($trail, $Task) {
+    
+    $trail->parent('tasksCompletionCodes');
+    $trail->push($Task->name, route('storeCompletionCodes', $Task->id));
+
+});
+
+Breadcrumbs::for('CustomerDashboard', function ($trail) {
+    $trail->parent('home');
+    $trail->push('dashboard');
+});
+
 // Home > tecos
 Breadcrumbs::for('tecos', function ($trail) {
     $trail->parent('home');

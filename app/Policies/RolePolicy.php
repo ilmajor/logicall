@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Role;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
@@ -21,7 +21,6 @@ class RolePolicy
     }
     public function role(User $user,Role $role)
     {
-        dd($role);
         return $user->roles->max('weight') <= $role->max('weight');
     }
 }

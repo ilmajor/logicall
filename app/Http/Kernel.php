@@ -58,9 +58,13 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        
+        'AuthEmployee' => \App\Http\Middleware\AuthEmployeeMiddleware::class,
         'AuthAdmin' => \App\Http\Middleware\AuthAdminMiddleware::class,
         'AuthManager' => \App\Http\Middleware\AuthManagerMiddleware::class,
-        
+        'AuthOperator' => \App\Http\Middleware\AuthOperatorMiddleware::class,
+        'AuthCustomer' => \App\Http\Middleware\AuthCustomerMiddleware::class,
         'OktellProject' => \App\Http\Middleware\OktellProjectMiddleware::class,
+        'CheckRole' => \App\Http\Middleware\CheckRole::class,
     ];
 }

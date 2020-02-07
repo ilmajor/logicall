@@ -1,7 +1,7 @@
 @extends ('admin.layouts.master')
 @section('content')
 	
-	<h1>Пользователи ЛК.</h1>
+	<h1>Задачи Oktell в ЛК.</h1>
 	<hr>
     <div class="table-responsive">
       <table class="table table-striped table-sm">

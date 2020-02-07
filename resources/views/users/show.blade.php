@@ -232,7 +232,7 @@
                     
                     <table class="table table-sm">
                         <tbody>
-                            @foreach($users as $user)
+                            @foreach($usersList as $user)
                                 <tr>
                                     @if((!empty($UsersControl)) && in_array($user->id_user, $UsersControl))
                                         <td>
@@ -242,7 +242,7 @@
                                         </td>
                                         <td>
                                             <input type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
-                                               @if($roleWeight >= $userRoleWeight && Auth::id() != $user->id )
+                                               @if($user->weight >= $userRoleWeight && Auth::id() != $user->id )
                                                     disabled>
                                                     {{-- userRoleWeight залогинившийся  roleWeight просматриваемый--}}
                                                 @else
@@ -257,12 +257,12 @@
                                         </td>
                                         <td>
                                             <input  type="checkbox" name="UserA[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
-                                              @if($roleWeight >= $userRoleWeight && Auth::id() != $user->id )
+                                                @if($user->weight >= $userRoleWeight && Auth::id() != $user->id )
                                                     disabled>
                                                 @else
                                                     >
                                                 @endif                                            
-                                        </td>
+                                            </td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -277,7 +277,7 @@
                     
                     <table class="table table-sm">
                         <tbody>
-                            @foreach($users as $user)
+                            @foreach($usersList as $user)
                                 <tr>
                                     @if((!empty($UsersUnderControl)) && in_array($user->id_user, $UsersUnderControl))
                                         <td>
@@ -286,7 +286,7 @@
                                             </label>
                                         </td>
                                         <td><input type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" checked 
-                                            @if($roleWeight >= $userRoleWeight && Auth::id() != $user->id )
+                                            @if($user->weight >= $userRoleWeight && Auth::id() != $user->id )
                                                 disabled>
                                             @else
                                                 >
@@ -300,7 +300,7 @@
                                         </td>
                                         <td><input  type="checkbox" name="UserB[]" value="{{$user->id_user}}" id="{{$user->id_user}}" 
 
-                                            @if($roleWeight >= $userRoleWeight && Auth::id() != $user->id )
+                                            @if($user->weight >= $userRoleWeight && Auth::id() != $user->id )
                                                 disabled>
                                             @else
                                                 >

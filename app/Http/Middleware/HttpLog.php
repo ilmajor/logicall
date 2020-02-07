@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 
 use Illuminate\Support\Facades\Auth;
-use App\UrlLog;
+use App\Models\UrlLog;
 
 class HttpLog
 {
@@ -18,7 +18,6 @@ class HttpLog
      */
     public function handle($request, Closure $next)
     {
-        
         $log = New UrlLog;
         #$log->description = 
         #$log->origin = 

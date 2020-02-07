@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Role;
+use App\Models\Role;
+
 class RolesController extends Controller
 {
 	public function __construct()
@@ -26,29 +27,39 @@ class RolesController extends Controller
 	}
 	public static function update(Role $role)
 	{
-	    $role->update(request()->except(['_method','_token']));
-	    $role->save();
-	    return redirect()->back();
+	    $role->update([
+			'name' => request('name'),
+			'description' => request('description'),
+			'weight' => request('weight'),
+			'employee' => request()->has('employee')
+	    ]);
+
+		return redirect()->back();
 	}
 	public function create()
 	{
 		return view('admin.role.create');
 	}
-	public function store(){
+	public function store()
+	{
+		
 		$this->validate(request(),[
 		  'name' => 'required|min:3',
 		  'description' => 'required',
 		  'weight' => 'required',
+		  'employee' => 'required',
 		]);
 		
 		Role::create([
 		  'name' => request('name'),
 		  'description' => request('description'),
 		  'weight' => request('weight'),
+		  'employee' => request()->has('employee')
 		]);
 		return redirect()->back();
 	}
-	public function destroy(Role $role){
+	public function destroy(Role $role)
+	{
 		$role->delete();
 		return redirect()->back();
 	}

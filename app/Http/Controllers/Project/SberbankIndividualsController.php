@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\User;
+use App\Models\User;
 use DB;
 use Carbon\Carbon;
-use App\project\sberbankIndividuals\SberbankIndividualsRequireFU;
+use App\Models\project\sberbankIndividuals\SberbankIndividualsRequireFU;
 
 
 class SberbankIndividualsController extends Controller

@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 Use Illuminate\Support\Facades\Auth;
-use App\Section;
-use App\Role;
-use App\Project;
-use App\User;
+use App\Models\Section;
+use App\Models\Role;
+use App\Models\Project;
+use App\Models\User;
 
 class SectionController extends Controller
 {
@@ -83,7 +83,8 @@ class SectionController extends Controller
     return redirect()->route('adminSections');
   }
 
-  public function update(Section $section){
+  public function update(Section $section)
+  {
     
     $this->validate(request(),[
       'title' => 'required|min:3',

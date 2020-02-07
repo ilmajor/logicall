@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-Use App\ContractingOrganization;
-Use App\User;
+Use App\Models\ContractingOrganization;
+Use App\Models\User;
 use Illuminate\Support\Str;
 
 class ContractingOrganizationController extends Controller

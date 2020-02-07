@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 #use Illuminate\Support\Facades\Schema;
 #use Illuminate\Support\Facades\Auth;
-Use App\Task;
+Use App\Models\Task;
 Use DB;
-Use App\DatabaseExclusion;
-Use App\Section;
+Use App\Models\DatabaseExclusion;
+Use App\Models\Section;
 use Illuminate\Support\Arr;
 /*
 Use App\Project;
@@ -29,6 +29,7 @@ class DatabaseExclusionController extends Controller
 	{
 		//$Tasks = Task::orderBy('project')->orderBy('name')->get();
 		$Tasks = Task::whereNotNull('task_table')
+			->whereNotNull('is_outbound')
 			->get();
 		$Tasks = $Tasks->sortBy('project.name')->sortBy('name');
 		
@@ -37,6 +38,11 @@ class DatabaseExclusionController extends Controller
 
 	public static function show(Task $task)
 	{
+
+		if ($task->is_outbound != true) {
+			return redirect()->route('admnDatabaseExclusions');
+		}
+
 		$DatabaseExclusions = DatabaseExclusion::where('task_id',$task->id)->get();
 
 		$columns = DB::connection('oktell')
@@ -52,6 +58,9 @@ class DatabaseExclusionController extends Controller
 
 	public function update(Task $task)
 	{
+		if ($task->is_outbound != true) {
+			return redirect()->route('admnDatabaseExclusions');
+		}
 		
 		$this->validate(request(),[
 			'column' => 'required'

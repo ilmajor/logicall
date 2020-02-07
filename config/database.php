@@ -77,6 +77,10 @@ return [
             'prefix'   => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
+            'options' => array(
+                PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE => true
+            )
 
         ],
         'oktell' => [

@@ -16,6 +16,7 @@ class AuthAdminMiddleware
     public function handle($request, Closure $next)
     {
         $request->user()->authorizeRoles(['admin']);
+        //dd($request->user()->authorizeRoles(['admin']));
         return $next($request);
     }
 }

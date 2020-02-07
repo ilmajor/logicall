@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
-use App\Task;
-use App\User;
-use App\OktellSetting;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\OktellSetting;
 use Carbon\Carbon;
 
 class AlgorithmSettingsController extends Controller
@@ -21,25 +21,22 @@ class AlgorithmSettingsController extends Controller
     public function index()
     {
 
-      $tasks = Task::with('project')
-          ->where(function ($query) {
-            $query->whereIn('project_id',User::find(Auth::id())->projects->pluck('id'))
-                ->orWhereNull('project_id');
-          })
-          ->get();
-      $tasks = $tasks->sortBy('project.name')->sortBy('name');
-      
-      return view('algorithmSettings.tasks',compact([
-    	   'tasks'
-        ])
-      );
+        $tasks = Task::availableOutbound(Auth::id());
+        $tasks = $tasks->sortBy('project.name')->sortBy('name');
+        return view('algorithmSettings.tasks',compact([
+          'tasks'
+        ]));
     }
 
     public function show(Task $task)
     {
 
       $this->authorize('access', $task->project);
-      
+
+      if ($task->is_outbound != true) {
+        return redirect()->route('algorithmSettings');
+      }
+
       $settings = OktellSetting::where('idtask',$task->uuid)->first();
 
       $queue = DB::connection('sqlsrv_srn')
@@ -121,7 +118,6 @@ class AlgorithmSettingsController extends Controller
         })
         ->selectRaw('count(*) as selection')
         ->first();
-      
 
       return view('algorithmSettings.index',compact([
         'task',
@@ -131,11 +127,13 @@ class AlgorithmSettingsController extends Controller
         'baseDataTomorrow'
       ]));
     }
-
-
+    
    public function update(Task $task)
    {
-
+      if ($task->is_outbound != true) {
+        return redirect()->route('algorithmSettings');
+      }
+      
       $this->validate(request(),[
         'waitcall_min' => 'required',
         'waitcall_max' => 'required',

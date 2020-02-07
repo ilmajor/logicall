@@ -6,11 +6,12 @@
     <div class="table-responsive">
       <table class="table table-striped table-sm">
         <tbody>
-          @foreach ($Roles as $role )
+          @foreach ( $Roles as $role )
               <tr>
                 <td>{{ $role->name}}</td>
                 <td>{{ $role->description }}</td>
                 <td>{{ $role->weight }}</td>
+                <td>{{ $role->employee }}</td>
                 <td><a href="/lk/admin/role/{{ $role->id }}" class="btn btn-warning">Редактировать</a></td>
                 <td>
                   <form method="POST" action="/lk/admin/role/{{ $role->id }}">

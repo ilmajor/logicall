@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-Use App\Project;
-Use App\User;
+Use App\Models\Project;
+Use App\Models\User;
+use App\Repositories\Users;
+
 class ProjectController extends Controller
 {
 	public function __construct()
@@ -14,7 +16,7 @@ class ProjectController extends Controller
 		#$this->middleware('AuthAdmin');
 	}
 
-	public static function index()
+	public function index()
 	{
 		$project = Project::orderBy('name')->get();
 		return view('admin.project.index',compact([
@@ -22,13 +24,9 @@ class ProjectController extends Controller
 		]));
 	}
 
-	public static function show(Project $project)
+	public function show(Project $project, Users $users)
 	{
-		$managers = User::whereHas('roles', function ($query) {
-				$query->whereIn('roles.id' ,[2]);
-			})
-		->orderBy('users.name','asc')
-		->get();
+		$managers = $users::getUserByRole(['manager']);;
 
 		return view('admin.project.show',compact(
 			'project'
@@ -36,7 +34,7 @@ class ProjectController extends Controller
 		));
 	}
 
-	public static function update(Project $project)
+	public function update(Project $project)
 	{
 		$project->update(request()->except(['_method','_token']));
 		$project->is_enabled = request()->input('is_enabled');
@@ -44,7 +42,6 @@ class ProjectController extends Controller
 
 		return redirect()->back();
 	}
-
 }
 
 

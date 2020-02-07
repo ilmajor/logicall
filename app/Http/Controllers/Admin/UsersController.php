@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 Use Illuminate\Support\Facades\Auth;
-Use App\User;
-Use App\Role;
+Use App\Models\User;
+Use App\Models\Role;
 class UsersController extends Controller
 {
 	public function __construct()
@@ -24,6 +24,7 @@ class UsersController extends Controller
 	{
 		$UserRoles = $User->roles;
 		$Roles = Role::get();
+		
 		return view('admin.user.show',compact(
 			'User'
 			,'UserRoles'
@@ -35,10 +36,11 @@ class UsersController extends Controller
 	    $log = $User->roles()->sync(request()->input('role'));
 	    
 		activity()
-		    ->performedOn($user)
+		    ->performedOn($User)
 		    ->causedBy(auth()->user())
 		    ->withProperties($log)
 		    ->log(':causer.name changed sites for :subject.title');
+
 	    return redirect()->back();
 	}
 }

@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Project\sberbankLE;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\project\sberbankLE\Tecos;
-use App\project\sberbankLE\TecosLogStart;
-use App\project\sberbankLE\TecosLogStop;
-use App\Task;
-use App\User;
-use App\Project;
+use App\Models\project\sberbankLE\Tecos;
+use App\Models\project\sberbankLE\TecosLogStart;
+use App\Models\project\sberbankLE\TecosLogStop;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Project;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;

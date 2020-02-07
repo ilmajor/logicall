@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-Use App\City;
-Use App\User;
+Use App\Models\City;
+Use App\Models\User;
 use Illuminate\Support\Str;
+use App\Repositories\Users;
 
 class CityController extends Controller
 {
@@ -15,7 +16,8 @@ class CityController extends Controller
 		#$this->middleware('auth');
 		#$this->middleware('AuthAdmin');
 	}
-	public static function index()
+
+	public function index()
 	{
 		$city = City::orderBy('name')->get();
 
@@ -24,21 +26,16 @@ class CityController extends Controller
 		]));
 	}
 
-	public static function show(City $city)
+	public function show(City $city, Users $users)
 	{
-		$managers = User::whereHas('roles', function ($query) {
-				$query->whereIn('roles.id' ,[2]);
-			})
-		->orderBy('users.name','asc')
-		->get();
-		
+		$managers = $users::getUserByRole(['manager']);
 		return view('admin.city.show',compact(
 			'city',
 			'managers'
 		));
 	}
 
-	public static function update(City $city)
+	public function update(City $city)
 	{
 		$city->update(request()->except(['_method','_token']));
 		$city->save();
@@ -46,7 +43,7 @@ class CityController extends Controller
 	}
 
 	public function create()
-	{	
+	{
 		$managers = User::whereHas('roles', function ($query) {
 				$query->whereIn('roles.id' ,[2]);
 			})
@@ -58,24 +55,23 @@ class CityController extends Controller
 		]));
 	}
 
-	public function store(){
+	public function store()
+	{
 		$this->validate(request(),[
 			'name' => 'required',
 			'director' => 'required',
 			'address' => 'required',
 		]);
-
 		$city = new City;
 		$city->uuid = (string) Str::uuid();
 		$city->fill(request()->except(['_method','_token']));
 		$city->save();
 		return redirect()->back();
-		
 	}
 
-	public function destroy(City $city){
+	public function destroy(City $city)
+	{
 		$city->delete();
 		return redirect()->back();
 	}
-	
 }

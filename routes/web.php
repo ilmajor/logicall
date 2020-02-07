@@ -16,17 +16,29 @@ Route::get('/logout', 'SessionsController@destroy')->name('logout');
 Route::post('/login', 'SessionsController@store');
 Route::middleware(['auth'])->group(function () {
 	
-	Route::get('/user','UsersController@show')->name('userId');
-	
+/*	Route::get('/statistics','StatisticsController@show')->name('statistics');
+	Route::post('/statistics','StatisticsController@send');*/
+	Route::get('/user','UsersController@showOwnerData')->name('userId');
 	Route::get('/','SectionsController@index')->name('home');
-	Route::get('/statistics','StatisticsController@show')->name('statistics');
-	Route::post('/statistics','StatisticsController@send');
+
+	Route::middleware(['AuthEmployee'])->group(function () {
+		
+		Route::get('/statistics','StatisticsController@show')->name('statistics');
+		Route::post('/statistics','StatisticsController@send');
+	});
+	
 	#sberbankFU
 	Route::middleware(['OktellProject:16'])->group(function () {
 		Route::get('/project/sberbankIndividuals','Project\SberbankIndividualsController@index')
 			->name('projectSberbankIndividuals');
 		Route::post('/project/sberbankIndividuals','Project\SberbankIndividualsController@store');
 	});	
+
+	Route::middleware(['AuthCustomer'])->group(function () {
+		Route::get('/CustomerDashboard','CustomerDashboardController@show')
+			->name('CustomerDashboard');
+		Route::get('/CustomerDashboard/{CustomerDashboard}','CustomerDashboardController@send');
+	});
 
 	Route::middleware(['AuthManager'])->group(function () {
 		#tecos
@@ -44,12 +56,12 @@ Route::middleware(['auth'])->group(function () {
 				->name('tecosStopForever');
 		});	
 
-		Route::get('/users/create','OktellController@createUser')->name('userCreate');
-		Route::post('/users/create','OktellController@storeUser')->name('userStore');
+		Route::get('/users/create','UsersController@create')->name('userCreate');
+		Route::post('/users/create','UsersController@store')->name('userStore');
 
-		Route::get('/users','OktellController@indexUser')->name('users');
-		Route::get('/users/{user}','OktellController@showUser')->name('user');
-		Route::post('/users/{user}','OktellController@updateUser')->name('userUpdate');
+		Route::get('/users','UsersController@index')->name('users');
+		Route::get('/users/{user}','UsersController@show')->name('user');
+		Route::post('/users/{user}','UsersController@update')->name('userUpdate');
 
 		#algorithmSettings
 		Route::get('/algorithmSettings','AlgorithmSettingsController@index')->name('algorithmSettings');
@@ -60,6 +72,15 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/DatabaseExclusion/{task}','DatabaseExclusionController@show')->name('DatabaseExclusion');
 		Route::post('/DatabaseExclusion/{task}','DatabaseExclusionController@exclusion');
 		Route::post('/DatabaseInclusion/{task}','DatabaseExclusionController@inclusion');
+
+		Route::get('/CompletionCodes','CompletionCodesController@tasks')->name('tasksCompletionCodes');
+		Route::get('/CompletionCodes/{task}','CompletionCodesController@index')->name('CompletionCodes');
+		Route::get('/CompletionCodes/{task}/create','CompletionCodesController@create')->name('CreateCompletionCodes');
+		Route::post('/CompletionCodes/{task}/create','CompletionCodesController@store')->name('storeCompletionCodes');
+		Route::get('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@show')->name('CompletionCode');
+		
+		Route::post('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@update');
+
 	});	
 	Route::middleware(['AuthAdmin'])->group(function () {
 
@@ -122,6 +143,17 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/admin/ContractingOrganization/{ContractingOrganization}','Admin\ContractingOrganizationController@show');
 		Route::post('/admin/ContractingOrganization/{ContractingOrganization}','Admin\ContractingOrganizationController@update');
 		Route::delete('/admin/ContractingOrganization/{ContractingOrganization}','Admin\ContractingOrganizationController@destroy');
+
+
+		Route::get('/admin/CustomerDashboard/create','Admin\CustomerDashboardController@create')
+			->name('adminCustomerDashboardCreate');
+		Route::post('/admin/CustomerDashboard/create','Admin\CustomerDashboardController@store');
+		Route::get('/admin/CustomerDashboard/','Admin\CustomerDashboardController@index')
+			->name('adminCustomerDashboards');
+		Route::get('/admin/CustomerDashboard/{CustomerDashboard}','Admin\CustomerDashboardController@show')
+			->name('adminCustomerDashboard');
+		Route::post('/admin/CustomerDashboard/{CustomerDashboard}','Admin\CustomerDashboardController@update');
+		Route::delete('/admin/CustomerDashboard/{CustomerDashboard}','Admin\CustomerDashboardController@destroy');
 	});	
 
 });	

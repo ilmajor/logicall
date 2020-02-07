@@ -25,6 +25,13 @@
 		</div>
 
 		<div class="form-group">
+			<label for="employee">Сотрудник компании?</label>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="checkbox" id="employee" name="employee[]"  >
+			</div>
+		</div>
+
+		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Создать</button>
 		</div>
 

@@ -4,38 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
+
 use DB;
-use App\Task;
-use App\User;
-use App\OktellSetting;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\OktellSetting;
 use Carbon\Carbon;
-Use App\DatabaseExclusion;
+Use App\Models\DatabaseExclusion;
 
 class DatabaseExclusionController extends Controller
 {
     public function __construct()
     {
-      #$this->middleware('auth');
-      #$this->middleware('AuthManager');
+    	#
     }
 
 	public static function index()
 	{
-		$tasks = Task::with('project')
-			->where(function ($query) {
-				$query->whereIn('project_id',User::find(Auth::id())->projects->pluck('id'))
-					->orWhereNull('project_id');
-			})
-			->whereIn('id',DatabaseExclusion::pluck('task_id'))
-			->get();
-
+		$tasks = Task::availableOutbound(Auth::id());
+		$tasks = $tasks->whereIn('id',DatabaseExclusion::pluck('task_id'));
 		$tasks = $tasks->sortBy('project.name')->sortBy('name');
-		
 		return view('DatabaseExclusion.index',compact('tasks'));
 	}
 
 	public function show(Task $task)
 	{
+
+		if ($task->is_outbound != true) {
+			return redirect()->route('DatabaseExclusions');
+		}
 		$this->authorize('access', $task->project);
 		$DatabaseExclusions = DatabaseExclusion::where('task_id',$task->id)->get();
 		foreach ($DatabaseExclusions as $DatabaseExclusion) {
@@ -76,8 +74,6 @@ class DatabaseExclusionController extends Controller
 			else{
 				$columnsInclusion[$DatabaseExclusion->exclusion_column][Null] = Null;
 			}
-			#$columns[$DatabaseExclusion->exclusion_column]['data'] = $data->pluck('data');
-			#$columns[$DatabaseExclusion->exclusion_column]['count'] = $data->pluck('count');
 		}
 
 		return view('DatabaseExclusion.show',compact(
@@ -90,23 +86,12 @@ class DatabaseExclusionController extends Controller
 
 	public function exclusion(Task $task)
 	{
+		if ($task->is_outbound != true) {
+			return redirect()->route('DatabaseExclusions');
+		}
 		$this->authorize('access', $task->project);
-		/*      
-			$this->validate(request(),[
-			'waitcall_min' => 'required',
-			'waitcall_max' => 'required',
-			'max_queue' => 'required',
-			'startqueue' => 'required',
-			'startcount' => 'required',
-			'count_calls' => 'required',
-			'CallMaxCount' => 'required',
-			'StartHour' => 'required' 
-			]);
-		*/
-		
-		//$DatabaseExclusions = DatabaseExclusion::where('task_id',$id)->get();
-		$request = request()->except(['_method','_token']);
 
+		$request = request()->except(['_method','_token']);
 		$query = DB::connection('oktell')
 			->table($task->task_table);
 			if(is_array($request)) {
@@ -114,19 +99,15 @@ class DatabaseExclusionController extends Controller
 					$query->where($key, $value);
 				}
 		}
-
-		$a = $query->update(['statusflag'=>'C']);
-
-		/*     
-		$task->update(request()->except(['_method','_token']));
-		$task->save();
-		*/
-		
+		$a = $query->update(['statusflag'=>'C']);	
 		return redirect()->back();
 	}
 
-	public function inclusion($task)
+	public function inclusion(Task $task)
 	{
+		if ($task->is_outbound != true) {
+			return redirect()->route('DatabaseExclusions');
+		}
 		$this->authorize('access', $task->project);
 		$request = request()->except(['_method','_token']);
 

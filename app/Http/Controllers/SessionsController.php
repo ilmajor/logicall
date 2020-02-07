@@ -21,14 +21,11 @@ class SessionsController extends Controller
 	{
 
 		$data = [];
-
 		$data['login'] = request('login');
-
 		$data['password'] = request('password');
-
-		if(! Auth::attempt($data))
+		$remember = request('remember');
+		if(! Auth::attempt($data,($remember == 'on') ? true : false))
 		{
-
 			return back()->withErrors([
 				'massage' => 'Проверьте данные'
 			]);

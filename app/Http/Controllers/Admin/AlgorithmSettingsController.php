@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-Use App\Task;
-use App\Project;
-Use App\User;
-Use App\OktellSetting;
+Use App\Models\Task;
+use App\Models\Project;
+Use App\Models\User;
+Use App\Models\OktellSetting;
 Use DB;
 
 class AlgorithmSettingsController extends Controller
 {
 	public function __construct()
-	{
+	{ 
 		##$this->middleware('auth');
 		#$this->middleware('AuthAdmin');
 	}
@@ -23,21 +23,26 @@ class AlgorithmSettingsController extends Controller
 	{
 		//$Tasks = Task::orderBy('project')->orderBy('name')->get();
 		$Tasks = Task::with('project')
+			->whereNotNull('is_outbound')
 			->get();
 		$Tasks = $Tasks->sortBy('project.name')->sortBy('name');
 		return view('admin.task.index',compact('Tasks'));
 	}
-	public static function show($id)
+	public static function show(Task $Task)
 	{
-		$Task = Task::find($id);
+		#$Task = Task::find($id);
+		if ($Task->is_outbound != true) {
+			return redirect()->route('admnTasks');
+		}
 		$OktellSetting = OktellSetting::where('idtask',$Task->uuid)->first();
 		
 		return view('admin.task.show',compact(['OktellSetting','Task']));
 	}
-	public static function update($id)
+	public static function update(Task $Task)
 	{
-		#dd(request()->input('is_taskid'));
-	    $Task = Task::find($id);
+		if ($Task->is_outbound != true) {
+			return redirect()->route('admnTasks');
+		}
 	    $OktellSetting = OktellSetting::where('idtask',$Task->uuid)->first();
 	    $Task->update(request()->except(['_method','_token','max_client_time_calls','']));
 	    

@@ -14,7 +14,7 @@
                 {{ 'Вы сегодня не работали в Oktell.'}}
               </li>
             @else 
-              @foreach ($timeWorked as $time )
+              @foreach ($timeWorked as $time ) 
                 <li class="list-group-item">
                   {{ $time->Name}}: {{ $time->humanTime}}
                 </li>

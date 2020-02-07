@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Task;
+use App\Models\User;
+use App\Models\Task;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
@@ -22,9 +22,6 @@ class TaskPolicy
 
     public function index(User $user, Task $task)
     {
-
-        dd($task);
-
         return $user->is($task->project);
 
     }

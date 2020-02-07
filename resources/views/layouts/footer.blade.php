@@ -2,9 +2,9 @@
 	<div class="container">
 		<p class="float-right">
 		  {{-- <a href="#">Back to top</a> --}}
-		  @if(Auth::check())
+{{-- 		  @if(Auth::check())
 			  	<hr>
-{{-- 				<ul>
+				<ul>
 					@foreach ($userdata as $data )
 						Имя : {{ $data->name }}
 						ID : {{ $data->id_user }}
@@ -12,7 +12,7 @@
 						dte : {{ $data->dte}}
 					@endforeach
 
-				</ul> --}}
+				</ul>
 				<ul>
 					Имя: {{ Auth::user()->name }}
 					login: {{ Auth::user()->login }}
@@ -20,7 +20,7 @@
 					id_user: {{ Auth::user()->id_user }}
 					date: {{ date('Y-m-d')}}
 				</ul>
-			@endif
+			@endif --}}
 		</p>
 	</div>
 </footer>
