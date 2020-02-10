@@ -14,6 +14,7 @@ use App\Models\Project;
 use App\Models\OktellUserControl;
 use App\Models\City;
 use App\Models\ContractingOrganization;
+use App\Models\OktellPlugin;
 
 #use App\Http\Controllers\Controller;
 
@@ -167,6 +168,20 @@ public function show(Users $users, User $user)
     $UsersControl = $UsersControl->pluck('UserA')->toArray();
 
     $ContractingOrganizations = ContractingOrganization::orderBy('name')->get();
+
+    $OktellPlugins = DB::table('oktell_settings.dbo.A_PluginMenu')
+      ->select('Id','MenuText')
+      ->orderBy('MenuText')
+      ->get();
+
+    $UserInOktellPlugins = DB::table('oktell_settings.dbo.A_PluginMenu_User')
+      ->select('IdMenuLink')
+      ->where('IdUser',$user->id_user)
+      ->groupBy('IdMenuLink')
+      ->get()
+      ->pluck('IdMenuLink')
+      ->toArray();
+
     return view('users.show',compact([
       'profile',
       'user',
@@ -180,13 +195,30 @@ public function show(Users $users, User $user)
       'UsersUnderControl',
       'UsersControl',
       'cities',
-      'ContractingOrganizations'
+      'ContractingOrganizations',
+      'OktellPlugins',
+      'UserInOktellPlugins'
     ]));
   }
 
   public function update(User $user)
   {
     
+    OktellPlugin::where('IdUser',$user->id_user)
+      ->delete();
+    $OktellPlugins = request()->input('OktellPlugins');
+
+    if(!empty(request()->input('OktellPlugins'))){
+      foreach ($OktellPlugins as $Plugin) {
+        //if(!in_array($UserA, $OktellUserBControls)){
+          $OktellPlugin = New OktellPlugin;
+          $OktellPlugin->IdUser = $user->id_user;
+          $OktellPlugin->IdMenuLink = $Plugin;
+          $OktellPlugin->Visible = 1;
+          $OktellPlugin->save();
+        //}
+      }
+    }
     // UserA еонтролирует UserB подчиняется
     $OktellUserAControls = OktellUserControl::where('UserA',$user->id_user)
       ->get();
@@ -224,7 +256,7 @@ public function show(Users $users, User $user)
       }
     }
     $Profile = Profile::where('user_id', $user->id)->first();
-    $Profile->update(request()->except(['_method','_token','project','UserA','UserB']));
+    $Profile->update(request()->except(['_method','_token','project','UserA','UserB','OktellPlugins']));
     $Profile->save();
     
     $log = $user->projects()->sync(request()->input('project'));

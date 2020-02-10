@@ -313,7 +313,26 @@
                     </table>
                 </div>
             </div>
-            
+            <hr>
+            <h3>Внешний модуль</h3>
+            <div class="form-group">
+                <select multiple class="form-control form-control" id="OktellPlugins" name="OktellPlugins[]" aria-describedby="OktellPlugins" size='10' 
+                @if($roleWeight > $userRoleWeight )
+                    disabled>
+                @else
+                    required>
+                @endif
+                    <option></option>
+                        @foreach($OktellPlugins as $OktellPlugin)
+                             @if((!empty($UserInOktellPlugins)) && in_array($OktellPlugin->Id, $UserInOktellPlugins))
+                                <option value="{{$OktellPlugin->Id}}" selected>{{$OktellPlugin->MenuText}}</option>
+                            @else 
+                                <option value="{{$OktellPlugin->Id}}">{{$OktellPlugin->MenuText}}</option>
+                            @endif  
+                            
+                        @endforeach
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form> 
     </div>
