@@ -36,9 +36,8 @@ class SectionController extends Controller
 
     $projects = Project::orderBy('name')->get();
 
-    $section = $section
-      ->with('role')
-      ->with('projects')
+    $section = $section->with(['role','projects'])
+      ->where('id',$section->id)
       ->first();
       
     return view('admin.section.show',compact([

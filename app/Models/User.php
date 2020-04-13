@@ -98,6 +98,11 @@ class User extends Authenticatable
     {
       return $this->hasOne(Profile::class);
     }
+
+    public function EmployeePresenceTable()
+    {
+      return $this->hasMany(EmployeePresenceTable::class);
+    }
     
     public function projects()
     {

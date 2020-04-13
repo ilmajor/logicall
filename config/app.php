@@ -164,6 +164,7 @@ return [
 
         //MaterializeCSS
         //Skydiver\LaravelMaterializeCSS\MaterializeCSSServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         
 
     ],
@@ -216,7 +217,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         //MaterializeCSS
         //'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
-
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];

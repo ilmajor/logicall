@@ -8,7 +8,7 @@
       {{ csrf_field() }}
 
       <div class="form-group">
-        <label for="Name">Название:</label>
+        <label for="Name">Название(для оператора):</label>
         <input type="text" class="form-control" id="Name" name="Name" value="{{ $CompletionCode->Name }}" required>
       </div>
       <div class="form-group">
@@ -19,17 +19,21 @@
         <label for="code_descript">Описание:</label>
         <input type="text" class="form-control" id="code_descript" name="code_descript" value="{{ $CompletionCode->code_descript }}" required>
       </div>
+      <div class="form-group">
+        <label for="code_name_short">Короткое название:</label>
+        <input type="text" class="form-control" id="code_name_short" name="code_name_short" value="{{ $CompletionCode->code_name_short }}" required>
+      </div>
       <fieldset class="form-group">
         <div class="row">
           <legend class="col-form-label col-sm-2 pt-0">Логика</legend>
             <div class="col-sm-10">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="TRUE" name="TRUE" {{$CompletionCode->TRUE == true ? 'checked': ''}}>
-                <label class="form-check-label" for="TRUE">TRUE</label>
+                <label class="form-check-label" for="TRUE">Набор</label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="DIAL" name="DIAL" {{$CompletionCode->DIAL == true ? 'checked': ''}}>
-                <label class="form-check-label" for="DIAL">Набор</label>
+                <label class="form-check-label" for="DIAL">Соединение с клиентом</label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="PRESENTATION" name="PRESENTATION" {{$CompletionCode->PRESENTATION == true ? 'checked': ''}}>

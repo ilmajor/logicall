@@ -16,15 +16,15 @@
       <table class="table table-striped table-sm table-bordered">
         <thead class="thead-dark">
           <tr>
-            <th>Name</th>
-            <th>code_name</th>
-            <th>code_descript</th>
+            <th>Название</th>
+            <th>Результат</th>
+            <th>Описание</th>
             <th>Скрытый код</th>
-            <th>TRUE</th>
-            <th>DIAL</th>
-            <th>PRESENTATION</th>
-            <th>CONSENT</th>
-            <th>CONSENT_OP</th>
+            <th>Набор</th>
+            <th>Соединение с клиентом</th>
+            <th>Презентация</th>
+            <th>Согласие</th>
+            <th>Согласие дополнительное</th>
             <th></th>
           </tr>
         </thead>

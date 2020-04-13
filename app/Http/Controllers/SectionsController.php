@@ -22,4 +22,11 @@ class SectionsController extends Controller
 			'sections'
 		]));
 	}
+
+	public function store()
+	{
+		
+		dd(is_numeric(request('browser')));
+		dd(request('browser'));
+	}
 }

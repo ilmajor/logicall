@@ -20,6 +20,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/statistics','StatisticsController@send');*/
 	Route::get('/user','UsersController@showOwnerData')->name('userId');
 	Route::get('/','SectionsController@index')->name('home');
+	//Route::post('/test','SectionsController@store')->name('test');
 
 	Route::middleware(['AuthEmployee'])->group(function () {
 		
@@ -80,6 +81,13 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@show')->name('CompletionCode');
 		
 		Route::post('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@update');
+
+		Route::get('/EmployeePresence','EmployeePresenceTableController@index')->name('EmployeePresenceUsers');
+		Route::get('/EmployeePresence/{user}','EmployeePresenceTableController@show')->name('EmployeePresence');
+		Route::get('/EmployeePresence/{EmployeePresence}/edit','EmployeePresenceTableController@edit')->name('EmployeePresenceEdit');
+		Route::post('/EmployeePresence/{EmployeePresence}/update','EmployeePresenceTableController@update')->name('EmployeePresenceUpdate');
+		#Route::post('/EmployeePresence/{task}','DatabaseExclusionController@exclusion');
+		#Route::post('/EmployeePresence/{task}','DatabaseExclusionController@inclusion');
 
 	});	
 	Route::middleware(['AuthAdmin'])->group(function () {

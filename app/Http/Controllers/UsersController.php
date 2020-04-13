@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cache;
+
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
@@ -47,19 +49,38 @@ class UsersController extends Controller
   {
     $data = Role::UsersMaxWeight(Auth::id());
 
-    $users = User::join('oktell.dbo.A_users', function ($join) {
-        $join->on('users.id_user', '=', 'A_users.id');
-      })
-      ->orWhereHas('roles', function ($query) use($data)  {
-        $query->where('roles.weight' ,'<=' , User::find(Auth::id())->roles->max('weight'))
-        ->whereNotIn(
+    $currentUsers = User::join('oktell_settings.dbo.A_Users', function ($join) {
+            $join->on('users.id_user', '=', 'A_Users.id');
+          })
+          ->orWhereHas('roles', function ($query) use($data)  {
+            $query->where('roles.weight' ,'<=' , User::find(Auth::id())->roles->max('weight'))
+          ->whereNotIn(
             'role_user.user_id'
             ,$data !== null ? $data->users->pluck('id') : [0]
           );
-      })
-      ->orderBy('users.name','asc')
-      ->get();
-    return view('users.index',compact('users'));
+          })
+          ->where("IsDeleted",0)
+          ->orderBy('users.name','asc')
+          ->select("Users.*")
+          ->paginate(100);
+
+    $firedUsers = User::join('oktell_settings.dbo.A_Users', function ($join) {
+            $join->on('users.id_user', '=', 'A_Users.id');
+          })
+          ->orWhereHas('roles', function ($query) use($data)  {
+            $query->where('roles.weight' ,'<=' , User::find(Auth::id())->roles->max('weight'))
+          ->whereNotIn(
+            'role_user.user_id'
+            ,$data !== null ? $data->users->pluck('id') : [0]
+          );
+          })
+          ->where("IsDeleted",1)
+          ->orderBy('users.name','asc')
+          ->select("Users.*")
+          ->paginate(100);
+
+
+    return view('users.index',compact('currentUsers','firedUsers'));
   }
 
   public function create()
@@ -127,17 +148,8 @@ public function show(Users $users, User $user)
     $managers = $users->getUserByRole(['manager','supervisor']);
     $prefix = $users->getUserOktellNumber($user->id);
 
-    $usersList = User::LeftJoin('oktell.dbo.A_users', function ($join) {
+    $usersList = User::LeftJoin('oktell_settings.dbo.A_Users', function ($join) {
         $join->on('users.id_user', '=', 'A_users.id');
-      })
-      ->LeftJoin(DB::raw('(select user_id,max(roles.weight) as weight
-          from role_user
-          left join roles on [role_user].[role_id] = [roles].[id] 
-          group By user_id
-        ) as t'), 
-      function($join)
-      {
-         $join->on('users.id', '=', 't.user_id');
       })
       ->orWhereHas('roles', function ($query) {
         $query->where('roles.weight' ,'<' , User::find(Auth::id())->roles->max('weight'))
@@ -161,11 +173,15 @@ public function show(Users $users, User $user)
 
     $userRoleWeight = Auth::user()->roles->max('weight');
 
-    $UsersUnderControl = OktellUserControl::where('UserA',$user->id_user)->select('UserB')->get();
-    $UsersUnderControl = $UsersUnderControl->pluck('UserB')->toArray();
+    $UsersUnderControl = OktellUserControl::where('UserA',$user->id_user)
+      ->get()
+      ->pluck('UserB')
+      ->toArray();
 
-    $UsersControl = OktellUserControl::where('UserB',$user->id_user)->select('UserA')->get();
-    $UsersControl = $UsersControl->pluck('UserA')->toArray();
+    $UsersControl = OktellUserControl::where('UserB',$user->id_user)
+      ->get()
+      ->pluck('UserA')
+      ->toArray();
 
     $ContractingOrganizations = ContractingOrganization::orderBy('name')->get();
 
@@ -208,15 +224,15 @@ public function show(Users $users, User $user)
       ->delete();
     $OktellPlugins = request()->input('OktellPlugins');
 
-    if(!empty(request()->input('OktellPlugins'))){
+    if( request()->has('OktellPlugins')) {
       foreach ($OktellPlugins as $Plugin) {
-        //if(!in_array($UserA, $OktellUserBControls)){
+        if(!empty($Plugin)){
           $OktellPlugin = New OktellPlugin;
           $OktellPlugin->IdUser = $user->id_user;
           $OktellPlugin->IdMenuLink = $Plugin;
           $OktellPlugin->Visible = 1;
           $OktellPlugin->save();
-        //}
+        }
       }
     }
     // UserA еонтролирует UserB подчиняется

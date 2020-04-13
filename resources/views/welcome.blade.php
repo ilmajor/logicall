@@ -3,6 +3,7 @@
 @section('content')
 		<br>
 		<div class='container'>
+
 			@php $id = '' @endphp
 			@foreach($sections as $section)
 				@php $url = $section->url @endphp

@@ -22,22 +22,20 @@ class AlgorithmSettingsController extends Controller
 	public static function index()
 	{
 		//$Tasks = Task::orderBy('project')->orderBy('name')->get();
-		$Tasks = Task::with('project')
-			->whereNotNull('is_outbound')
-			->get();
+		$Tasks = Task::with('project')->get();
 		$Tasks = $Tasks->sortBy('project.name')->sortBy('name');
 		return view('admin.task.index',compact('Tasks'));
 	}
+
 	public static function show(Task $Task)
 	{
 		#$Task = Task::find($id);
-		if ($Task->is_outbound != true) {
-			return redirect()->route('admnTasks');
-		}
+
 		$OktellSetting = OktellSetting::where('idtask',$Task->uuid)->first();
 		
 		return view('admin.task.show',compact(['OktellSetting','Task']));
 	}
+
 	public static function update(Task $Task)
 	{
 		if ($Task->is_outbound != true) {
@@ -48,11 +46,13 @@ class AlgorithmSettingsController extends Controller
 	    
 	    $Task->is_taskid = empty(request()->input('is_taskid')) ? 0 : 1;
 	    $Task->save();
+	    
 	    $OktellSetting->MaxClientTimeCalls = request('max_client_time_calls');
 	    $OktellSetting->MinClientTimeCalls = request('min_client_time_calls');
 	    $OktellSetting->save();
 	    return redirect()->back();
 	}
+
 	public function create()
 	{
  		$OktellTasks = DB::table('oktell_settings.dbo.A_TaskManager_Tasks')
@@ -100,9 +100,24 @@ class AlgorithmSettingsController extends Controller
 			'is_taskid' => !empty(request('is_taskid')) ? "true" : "false",
 			'is_new_algorithm' => !empty(request('is_new_algorithm')) ? "true" : "false",
 			'name' => $OktellTasks->Name,
+			'is_outbound' => $OktellTasks->IsOutputTask,
 
 		]);
- 		if(request()->is_new_algorithm){
+ 		if($OktellTasks->IsOutputTask == true && request()->is_new_algorithm){
+			$this->validate(request(),[
+				'min_client_time_calls' => 'required',
+				'max_client_time_calls' => 'required',
+
+		        'waitcall_min' => 'required',
+		        'waitcall_max' => 'required',
+		        'max_queue' => 'required',
+		        'startqueue' => 'required',
+		        'startcount' => 'required',
+		        'count_calls' => 'required',
+		        'CallMaxCount' => 'required',
+		        'StartHour' => 'required',
+			]);
+
 			OktellSetting::create([
 				'idtask' => request('task_id'),
 				'waitcall_min' => request('waitcall_min'),
@@ -117,8 +132,6 @@ class AlgorithmSettingsController extends Controller
 				'MaxClientTimeCalls' => request('max_client_time_calls'),
 			]);
  		}
-
-
 		return redirect()->back();
 	}
 

@@ -40,7 +40,7 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table' => 'cache',
+            'table' => 'cache', 
             'connection' => null,
         ],
 

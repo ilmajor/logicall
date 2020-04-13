@@ -47,7 +47,7 @@ class RolesController extends Controller
 		  'name' => 'required|min:3',
 		  'description' => 'required',
 		  'weight' => 'required',
-		  'employee' => 'required',
+		  
 		]);
 		
 		Role::create([

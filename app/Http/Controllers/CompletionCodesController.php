@@ -10,7 +10,7 @@ use App\Models\User;
 
 class CompletionCodesController extends Controller
 {
-	public function tasks()
+	public function tasks() 
 	{
 		$tasks = Task::availableOutbound(Auth::id());
 		$tasks = $tasks->sortBy('project.name')->sortBy('name');
@@ -26,6 +26,7 @@ class CompletionCodesController extends Controller
 		if ($task->is_outbound != true) {
 			return redirect()->route('tasksCompletionCodes');
 		}
+		
 		$CompletionCodes = $task->CompletionCodes;
 		
 		return view('CompletionCodes.index',compact([
@@ -49,26 +50,32 @@ class CompletionCodesController extends Controller
 
 	public function update(Task $task, $CompletionCode)
 	{
+
+
 		$this->validate(request(),[
 			'Name' => 'required',
 			'code_name' => 'required',
-			'code_descript' => 'required'
+			'code_descript' => 'required',
+			#'code_name_short' => 'required'
 		]);
-		$CompletionCode = CompletionCode::getCompletionCode($task->uuid,$CompletionCode);
-		
-		$CompletionCode->update([
+
+		$CompletionCodeModel = CompletionCode::where('TaskId', $task->uuid)
+			->where('Result',$CompletionCode);
+
+		$CompletionCodeModel->update([
 			'Name' => request('Name'),
 			'code_name' => request('code_name'),
 			'code_descript' => request('code_descript'),
-			'TRUE' => request()->has('TRUE'),
-			'DIAL' => request()->has('DIAL'),
-			'PRESENTATION' => request()->has('PRESENTATION'),
-			'CONSENT' => request()->has('CONSENT'),
-			'CONSENT_OP' => request()->has('CONSENT_OP'),
-			'NotShow' => request()->has('NotShow'),
-			'IsNotFinal' => request()->has('IsNotFinal')
+			'TRUE' => request()->has('TRUE') ? true : NULL,
+			'DIAL' => request()->has('DIAL') ? true : NULL,
+			'PRESENTATION' => request()->has('PRESENTATION') ? true : NULL,
+			'CONSENT' => request()->has('CONSENT') ? true : NULL,
+			'CONSENT_OP' => request()->has('CONSENT_OP') ? true : NULL,
+			'NotShow' => request()->has('NotShow') ? true : NULL,
+			'IsNotFinal' => request()->has('IsNotFinal') ? true : NULL,
+			#'code_name_short' => request('code_name_short')
 		]);
-		
+
 		return redirect()->route('CompletionCodes', ['id' => $task->id]);
 
 	}
@@ -86,7 +93,8 @@ class CompletionCodesController extends Controller
 		$this->validate(request(),[
 			'Name' => 'required',
 			'code_name' => 'required',
-			'code_descript' => 'required'
+			'code_descript' => 'required',
+			#'code_name_short' => 'required'
 		]);
 		$Result = CompletionCode::where('TaskId',$task->uuid)->max('Result')+1;
 		$data = CompletionCode::create([
@@ -94,14 +102,15 @@ class CompletionCodesController extends Controller
 			'Name' => request('Name'),
 			'code_name' => request('code_name'),
 			'code_descript' => request('code_descript'),
-			'TRUE' => request()->has('TRUE'),
-			'DIAL' => request()->has('DIAL'),
-			'PRESENTATION' => request()->has('PRESENTATION'),
-			'CONSENT' => request()->has('CONSENT'),
-			'CONSENT_OP' => request()->has('CONSENT_OP'),
-			'NotShow' => request()->has('NotShow'),
-			'IsNotFinal' => request()->has('IsNotFinal'),
-			'TaskId' => $task->uuid
+			'TRUE' => request()->has('TRUE') ? true : NULL,
+			'DIAL' => request()->has('DIAL') ? true : NULL,
+			'PRESENTATION' => request()->has('PRESENTATION') ? true : NULL,
+			'CONSENT' => request()->has('CONSENT') ? true : NULL,
+			'CONSENT_OP' => request()->has('CONSENT_OP') ? true : NULL,
+			'NotShow' => request()->has('NotShow') ? true : NULL,
+			'IsNotFinal' => request()->has('IsNotFinal') ? true : NULL,
+			'TaskId' => $task->uuid,
+			#'code_name_short' => request('code_name_short')
 
 		]);
 		

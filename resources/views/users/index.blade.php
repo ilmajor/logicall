@@ -15,6 +15,7 @@
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="isWork" role="tabpanel" aria-labelledby="isWork-tab">
     <div class="table-responsive">
+      {{ $currentUsers->links() }}
       <table class="table table-striped table-sm">
         <thead>
           <tr>
@@ -22,40 +23,37 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($users as $user )
-            @if($user->IsDeleted == 0)
-              <tr>
-                
-                <td>{{ $user->name}}</td>
-                <td><a href="/lk/users/{{ $user->id }}">Редактировать</a></td>
-              </tr>
-            @endif
+          @foreach ($currentUsers as $user )
+            <tr>
+              
+              <td>{{ $user->name}}</td>
+              <td><a href="/lk/users/{{ $user->id }}">Редактировать</a></td>
+            </tr>
           @endforeach
         </tbody>
       </table>
+      {{ $currentUsers->links() }}
     </div>
   </div>
   <div class="tab-pane fade" id="IsDeleted" role="tabpanel" aria-labelledby="IsDeleted-tab">
     <div class="table-responsive">
+      {{ $firedUsers->links() }}
       <table class="table table-striped table-sm">
         <thead>
           <tr>
             <th>Имя</th>
-
           </tr>
         </thead>
         <tbody>
-          @foreach ($users as $user )
-            @if($user->IsDeleted == 1)
-              <tr>
-                
-                <td>{{ $user->name}}</td>
-                <td><a href="/lk/users/{{ $user->id }}">Редактировать</a></td>
-              </tr>
-            @endif
+          @foreach ($firedUsers as $user )
+            <tr>
+              <td>{{ $user->name}}</td>
+              <td><a href="/lk/users/{{ $user->id }}">Редактировать</a></td>
+            </tr>
           @endforeach
         </tbody>
       </table>
+      {{ $firedUsers->links() }}
     </div>
   </div>
 </div>

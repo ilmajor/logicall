@@ -22,6 +22,10 @@ Breadcrumbs::for('userId', function ($trail) {
     $trail->push('Пользовательские данные', route('userId'));
 });
 
+Breadcrumbs::for('test', function ($trail) {
+    $trail->push('test', route('test'));
+});
+
 // Home > projectSberbankIndividualsController
 Breadcrumbs::for('projectSberbankIndividuals', function ($trail) {
     $trail->parent('home');
@@ -45,6 +49,20 @@ Breadcrumbs::for('tasksCompletionCodes', function ($trail) {
     $trail->parent('home');
     $trail->push('Коды завершения', route('tasksCompletionCodes'));
 });
+
+// Home > EmployeePresenceTable
+Breadcrumbs::for('EmployeePresenceUsers', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Табель присутствия', route('EmployeePresenceUsers'));
+});
+
+// Home > EmployeePresenceTable
+Breadcrumbs::for('EmployeePresence', function ($trail,$user) {
+    $trail->parent('EmployeePresenceUsers');
+    $trail->push($user->profiles()->first()->FullName);
+});
+
+
 
 // Home > DatabaseExclusion > [DatabaseExclusion]
 Breadcrumbs::for('CompletionCodes', function ($trail, $Task) {
