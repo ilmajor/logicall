@@ -34,6 +34,7 @@ class EmployeePresenceTableController extends Controller
 				$join->on('employee_presence_table.user_id', '=', 'users.id');
 			})
 			->with('profiles')
+
 			->WhereHas('projects', function ($query) use($projects) {
 				$query->whereIn("projects.id", $projects->pluck('id'));
 			})
@@ -44,7 +45,7 @@ class EmployeePresenceTableController extends Controller
 						,$data !== null ? $data->users->pluck('id') : [0]
 					);
 			})
-			//->where("IsDeleted",0)
+			->where("IsDeleted",0)
 			->distinct()
 			->selectRaw('
 					Users.id
@@ -52,17 +53,24 @@ class EmployeePresenceTableController extends Controller
 					,sum(case when  month(presence_date) = month(getdate()) and condition = 2 then 1 else 0 end) as condition2
 					,sum(case when  month(presence_date) = month(getdate()) and condition = 1 then 1 else 0 end) as condition1
 			')
-			->groupBy('Users.id')
-			->get();
+			->groupBy('Users.id');
 
-		#dd($users);
-		#dd($projects->pluck('name')->implode(' | '));
-		//dd($users);
+		if($user->roles->max('weight') < 90) {
+			$users->WhereHas('profiles', function ($query) use($user) {
+				$query->where("profiles.City", $user->profiles->City);
+			});
+		}
+		$users = $users->get();
+		$users = $users->sortBy('profiles.FullName');
+		
 		return view('EmployeePresenceTable.index',compact('users','projects'));
 	}
 
 	public function show( User $user, Request $request)
 	{
+
+		$this->authorize('profileAccess', $user, $user);
+
 		$EmployeePresenceStatus = EmployeePresenceStatus::all();
 		$user = $user->profiles()->first();
 
@@ -102,10 +110,6 @@ class EmployeePresenceTableController extends Controller
 						return 'row-' . $data->name;
 					},
 				])
-				->addColumn('action', function($data){
-					$button = '<button type="button" name="edit" id="'.$data->id.'" class="edit btn btn-primary btn-sm">Edit</button>';
-					return $button;
-				})
 				->editColumn('presence_date', function($data) {
 					return Carbon::parse($data->presence_date)->format('d-m-Y');
 				})
@@ -130,26 +134,28 @@ class EmployeePresenceTableController extends Controller
 
 	public function update(Request $request, EmployeePresenceTable $EmployeePresenceTable)
 	{
-/*		$rules = array(
-			'work_time'=> 'required'
-		);
+/*		$this->validate(request(),[
+			'Name' => 'required',
+			'code_name' => 'required',
+			'code_descript' => 'required',
+			'code_name_short' => 'required'
 
-		$error = Validator::make($request->all(), $rules);
+		]);
 
 		if($error->fails()) {
 			return response()->json(['errors' => $error->errors()->all()]);
 		}*/
 
-		$form_data = array(
-			'work_time' => $request->work_time,
-			'condition' => $request->condition,
-			'comment' => $request->comment
-		);
-
-		EmployeePresenceTable::whereId($request->hidden_id)->update($form_data);
+		$EmployeePresenceTable = EmployeePresenceTable::find($request->hidden_id)
+			->update([
+				'work_time' => $request->work_time,
+				'condition' => $request->condition,
+				'comment' => $request->comment
+			]);
+		
 		$data = EmployeePresenceTable::findOrFail($request->hidden_id);
 		return response()->json([
-			'success' => 'Data is successfully updated',
+			'success' => 'Данные успешно обновлены',
 			'result' => $data
 
 		]);

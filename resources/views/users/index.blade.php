@@ -15,7 +15,7 @@
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="isWork" role="tabpanel" aria-labelledby="isWork-tab">
     <div class="table-responsive">
-      {{ $currentUsers->links() }}
+
       <table class="table table-striped table-sm">
         <thead>
           <tr>
@@ -32,12 +32,12 @@
           @endforeach
         </tbody>
       </table>
-      {{ $currentUsers->links() }}
+      
     </div>
   </div>
   <div class="tab-pane fade" id="IsDeleted" role="tabpanel" aria-labelledby="IsDeleted-tab">
     <div class="table-responsive">
-      {{ $firedUsers->links() }}
+
       <table class="table table-striped table-sm">
         <thead>
           <tr>
@@ -53,7 +53,7 @@
           @endforeach
         </tbody>
       </table>
-      {{ $firedUsers->links() }}
+
     </div>
   </div>
 </div>

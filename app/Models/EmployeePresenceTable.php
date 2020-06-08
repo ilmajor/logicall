@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class EmployeePresenceTable extends Model
 {
 	protected $table = 'employee_presence_table';
 	protected $dates = [
-    	'presence_date',
+		'presence_date'
 	];
+
+    protected $fillable = [
+		'work_time',
+		'condition',
+		'comment'
+    ];
 
 	public function user()
 	{

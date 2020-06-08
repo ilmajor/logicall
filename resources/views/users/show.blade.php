@@ -37,17 +37,28 @@
             </div>
             <div class="form-group">
                 <label for="EmploymentDate">Дата трудоустройства.</label>
-                <input type="date" class="form-control" id="EmploymentDate" name="EmploymentDate" aria-describedby="EmploymentDate" value="{{ 
-                    date("Y-m-d", strtotime($profile->EmploymentDate))
-                }}">
+                <input 
+                    type="date" 
+                    class="form-control" 
+                    id="EmploymentDate" 
+                    name="EmploymentDate" 
+                    aria-describedby="EmploymentDate" 
+                    value="{{ !empty($profile->EmploymentDate) ? date("Y-m-d", strtotime($profile->EmploymentDate)) : null}}">
             </div>
             <div class="form-group">
                 <label for="DateDismissal">Дата увольнения.</label>
-                <input type="date" class="form-control" id="DateDismissal" name="DateDismissal" aria-describedby="DateDismissal" 
-                    @if(!empty($profile->DateDismissal))
+                <input 
+                    type="date" 
+                    class="form-control" 
+                    id="DateDismissal" 
+                    name="DateDismissal" 
+                    aria-describedby="DateDismissal" 
+{{--                     @if(!empty($profile->DateDismissal))
                         value="{{ date("Y-m-d", strtotime($profile->DateDismissal)) }}"
-                    @endif
-                >
+                    @endif 
+                    >--}}
+                    value="{{ !empty($profile->DateDismissal) ? date("Y-m-d", strtotime($profile->DateDismissal)) : null}}">
+                
             </div>
             <div class="form-group">
                 <label for="City">Площадка.</label>
@@ -92,12 +103,7 @@
                 </select>
                 
             </div>
-{{--             <div class="form-group">
-                <label for="LastJumpDate">Дата последнего перехода.</label>
-                <input type="date" class="form-control" id="LastJumpDate" name="LastJumpDate" aria-describedby="LastJumpDate" value="{{ 
-                    date("Y-m-d", strtotime($profile->LastJumpDate))
-                }}" required>
-            </div> --}}
+
             <div class="form-group">
                 <label for="PinnedCoach">Закрепленный коуч.</label>
                 <select class="form-control form-control" id="PinnedCoach" name="PinnedCoach" aria-describedby="PinnedCoach" >
@@ -116,16 +122,7 @@
                     @endforeach
                 </select>
             </div>
-{{--            
-            <div class="form-group">
-                <label for="EnshrinedMentor">Закрепленный наставник.</label>
-                <input type="text" class="form-control" id="EnshrinedMentor" name="EnshrinedMentor" aria-describedby="EnshrinedMentor" value="{{ $profile->EnshrinedMentor }}">
-            </div> 
---}}
-{{--            <div class="form-group">
-                <label for="login"></label>
-                <input type="text" class="form-control" id="title" name="login" aria-describedby="login" placeholder="" readonly>
-            </div> --}}
+
             <div class="form-group">
                 <label for="TeamLeader">Руководитель группы.</label>
                 <select class="form-control form-control" id="TeamLeader" name="TeamLeader" aria-describedby="TeamLeader" >
@@ -135,39 +132,24 @@
                     @endforeach
                 </select>
             </div>
-    {{--        <div class="form-group">
-                <label for="Additional">Добавочный.</label>
-                <input type="text" class="form-control" id="Additional" name="Additional" aria-describedby="Additional" value="{{ $prefix->Prefix }}"readonly>
-            </div> --}}
+
             <div class="form-group">
                 <label for="DateofBirth">Дата рождения.</label>
-                <input type="date" class="form-control" id="DateofBirth" name="DateofBirth" aria-describedby="DateofBirth"  value="{{ 
-                    
-                    date("Y-m-d", strtotime($profile->DateofBirth) )
-                }}">
+                <input 
+                    type="date" 
+                    class="form-control" 
+                    id="DateofBirth" 
+                    name="DateofBirth" 
+                    aria-describedby="DateofBirth"  
+                    {{-- value="{{ date("Y-m-d", strtotime($profile->DateofBirth) ) }}"> --}}
+                    value="{{ !empty($profile->DateofBirth) ? date("Y-m-d", strtotime($profile->DateofBirth)) : null}}">
             </div>
-{{--            <div class="form-group">
-                <label for="Age">возраст.</label>
-                <input type="text" class="form-control" id="Age" name="Age" aria-describedby="Age" placeholder="{{
-                 
-                 \Carbon\Carbon::parse($profile->DateofBirth)->diffForHumans()
 
-                }}"readonly>
-            </div> --}}
-{{--            <div class="form-group">
-                <label for="ExperienceinKts">стаж в кц.</label>
-                <input type="text" class="form-control" id="ExperienceinKts" name="ExperienceinKts" aria-describedby="ExperienceinKts" placeholder="{{ 
-                    \Carbon\Carbon::parse($profile->EmploymentDate)->diffForHumans()
-                }} "readonly>
-            </div> --}}
             <div class="form-group">
                 <label for="WZemployeeLogin">Логин сотрудника в WZ.</label>
                 <input type="text" class="form-control" id="WZemployeeLogin" name="WZemployeeLogin" aria-describedby="WZemployeeLogin" value="{{ $profile->WZemployeeLogin }}">
             </div>
-{{--            <div class="form-group">
-                <label for="FixedtoProject">Закреплен на проекте.</label>
-                <input type="text" class="form-control" id="FixedtoProject" name="FixedtoProject" aria-describedby="FixedtoProject" value="{{ $profile->FixedtoProject }}">
-            </div> --}}
+            
             <div class="form-group">
                 <label for="MobilePhone">Мобильный телефон.</label>
                 <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" aria-describedby="MobilePhone" value="{{ $profile->MobilePhone }}">
@@ -188,43 +170,6 @@
 
             <hr>
             <h3>Права контроля.</h3>
-
-{{--             <div class="form-group">
-                <label for="project">Контролирует:</label>
-                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10' 
-                @if($roleWeight > $userRoleWeight )
-                    disabled>
-                @else
-                    required>
-                @endif
-                    <option></option>
-                        @foreach($users as $user)
-                            @if((!empty($UsersUnderControl)) && in_array($user->id_user, $UsersUnderControl))
-                                <option value="{{$user->id_user}}" selected>{{$user->name}}</option>
-                             @else 
-                                <option value="{{$user->id_user}}">{{$user->name}}</option>
-                            @endif
-                        @endforeach
-                </select>
-            </div> --}}
-{{--             <div class="form-group">
-                <label for="project">Подчиняется:</label>
-                <select multiple class="form-control form-control" id="project" name="project[]" aria-describedby="project" size='10' 
-                @if($roleWeight > $userRoleWeight )
-                    disabled>
-                @else
-                    required>
-                @endif
-                    <option></option>
-                        @foreach($users as $user)
-                            @if((!empty($UsersControl)) && in_array($user->id_user, $UsersControl))
-                                <option value="{{$user->id_user}}" selected>{{$user->name}}</option>
-                             @else 
-                                <option value="{{$user->id_user}}">{{$user->name}}</option>
-                            @endif
-                        @endforeach
-                </select>
-            </div> --}}
             
             <div class="form-group">
                 <label for="project">Подчиняется:</label>

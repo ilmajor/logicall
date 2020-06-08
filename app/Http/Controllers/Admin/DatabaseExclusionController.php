@@ -77,7 +77,7 @@ class DatabaseExclusionController extends Controller
 		foreach($columns as $column) {
 			if((!empty($column)) && !in_array($column, $DatabaseExclusions->pluck('exclusion_column')->toArray()))
 			{
-				$Task->databaseExclusion()->create([
+				$task->databaseExclusion()->create([
 					'task_id' => $task->id,
 					'exclusion_column' => $column
 

@@ -13,12 +13,17 @@
       </div>
       <div class="form-group">
         <label for="code_name">Результат:</label>
-        <input type="text" class="form-control" id="code_name" name="code_name" required>
+        <input type="text" class="form-control" id="code_name" name="code_name" >
       </div>
       <div class="form-group">
         <label for="code_descript">Описание:</label>
-        <input type="text" class="form-control" id="code_descript" name="code_descript" required>
+        <input type="text" class="form-control" id="code_descript" name="code_descript" >
       </div>
+      <div class="form-group">
+        <label for="code_name_short">Короткое название:</label>
+        <input type="text" class="form-control" id="code_name_short" name="code_name_short" required>
+      </div>
+
       <fieldset class="form-group">
         <div class="row">
           <legend class="col-form-label col-sm-2 pt-0">Логика</legend>
@@ -54,6 +59,25 @@
             </div>
           </div>
         </fieldset>
+        <div class="form-group">
+          <label for="call_algorithm">Логика для обзвона:</label>
+          <select class="form-control form-control" id="call_algorithm" name="call_algorithm" aria-describedby="call_algorithm">
+            <option value=""></option>
+            @foreach($callAlgorithms as $callAlgorithm)
+                <option value="{{ $callAlgorithm->Status }}">{{ $callAlgorithm->Name }}</option>
+            @endforeach 
+
+
+
+ {{--            @foreach($Results as $Result)
+              @if((!empty()) && ((int) $CallData->Result == $Result->Result))
+                <option value="" selected></option>
+              @else 
+                <option value=""></option>
+              @endif
+            @endforeach --}}
+          </select>
+        </div>
       @include('admin.layouts.errors')
 
       <button type="submit" class="btn btn-primary">Сохранить</button>

@@ -20,7 +20,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/statistics','StatisticsController@send');*/
 	Route::get('/user','UsersController@showOwnerData')->name('userId');
 	Route::get('/','SectionsController@index')->name('home');
-	//Route::post('/test','SectionsController@store')->name('test');
+	//Route::get('/test','WelcomeController@index')->name('test');
 
 	Route::middleware(['AuthEmployee'])->group(function () {
 		
@@ -79,8 +79,11 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/CompletionCodes/{task}/create','CompletionCodesController@create')->name('CreateCompletionCodes');
 		Route::post('/CompletionCodes/{task}/create','CompletionCodesController@store')->name('storeCompletionCodes');
 		Route::get('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@show')->name('CompletionCode');
-		
 		Route::post('/CompletionCodes/{task}/{CompletionCode}','CompletionCodesController@update');
+		#Change Completion Code
+		Route::get('/ChangeCompletionCode','ChangeCompletionCodeController@index')->name('searchChangeCompletionCode');
+		Route::post('/ChangeCompletionCode/idchain','ChangeCompletionCodeController@show')->name('showChangeCompletionCode');
+		Route::post('/ChangeCompletionCode/idchain/update','ChangeCompletionCodeController@update')->name('updateChangeCompletionCode');
 
 		Route::get('/EmployeePresence','EmployeePresenceTableController@index')->name('EmployeePresenceUsers');
 		Route::get('/EmployeePresence/{user}','EmployeePresenceTableController@show')->name('EmployeePresence');
@@ -119,6 +122,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/admin/task','Admin\AlgorithmSettingsController@index')->name('admnTasks');
 		Route::get('/admin/task/{task}','Admin\AlgorithmSettingsController@show')->name('admnTask');
 		Route::post('/admin/task/{task}','Admin\AlgorithmSettingsController@update');
+		Route::get('/admin/task/{task}/dublicate','Admin\AlgorithmSettingsController@dublicateIndex')->name('admnTaskDuplicationTaskScripts');
+		Route::post('/admin/task/{task}/dublicate','Admin\AlgorithmSettingsController@dublicateSend');
 		#exclusion Database
 		Route::get('/admin/DatabaseExclusion/','Admin\DatabaseExclusionController@index')->name('admnDatabaseExclusions');
 		Route::get('/admin/DatabaseExclusion/{task}/','Admin\DatabaseExclusionController@show')->name('admnDatabaseExclusion');

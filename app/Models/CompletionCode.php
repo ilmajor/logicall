@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class CompletionCode extends Model
 {
 	protected $connection= 'oktell';
 	protected $table = 'Results_test';
 
-	protected $primaryKey = 'Result';
+	//protected $primaryKey = 'ID';
+    protected $primaryKey = 'Result';
+    public $incrementing = false;
 	protected $fillable = [
 		'Result',
 		'Name',
@@ -22,14 +22,15 @@ class CompletionCode extends Model
 		'CONSENT_OP',
 		'TaskId',
 		'NotShow',
-		'IsNotFinal'
+		'IsNotFinal',
+		'code_name_short',
+		'call_algorithm'
 	];
 
-	public static function getCompletionCode($uuid, $CompletionCode)
+/*	public static function getCompletionCode($uuid, $CompletionCode)
 	{
 		return static::where('TaskId', $uuid)
 			->where('Result',$CompletionCode)
 			->first();
-
-	}
+	}*/
 }

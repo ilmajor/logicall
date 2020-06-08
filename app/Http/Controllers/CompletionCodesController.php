@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompletionCode;
+use App\Repositories\CompletionCodes;
 use App\Models\Task;
 use App\Models\User;
 
@@ -28,7 +30,7 @@ class CompletionCodesController extends Controller
 		}
 		
 		$CompletionCodes = $task->CompletionCodes;
-		
+
 		return view('CompletionCodes.index',compact([
 			'task',
 			'CompletionCodes'
@@ -41,27 +43,31 @@ class CompletionCodesController extends Controller
 		if ($task->is_outbound != true) {
 			return redirect()->route('tasksCompletionCodes');
 		}
-		$CompletionCode = CompletionCode::getCompletionCode($task->uuid,$CompletionCode);
+		
+		$CompletionCode = CompletionCodes::getCompletionCode($task->uuid,$CompletionCode);
+		$callAlgorithms = DB::table('oktell.dbo.algorithm_call_status')->get();
+		
 		return view('CompletionCodes.show',compact([
 			'CompletionCode'
 			,'task'
+			,'callAlgorithms'
 		]));
 	}
 
 	public function update(Task $task, $CompletionCode)
 	{
 
-
 		$this->validate(request(),[
 			'Name' => 'required',
 			'code_name' => 'required',
 			'code_descript' => 'required',
-			#'code_name_short' => 'required'
+			'code_name_short' => 'required'
 		]);
 
 		$CompletionCodeModel = CompletionCode::where('TaskId', $task->uuid)
 			->where('Result',$CompletionCode);
-
+		//$CompletionCodeModel = CompletionCodes::getCompletionCode($task->uuid,$CompletionCode);
+		
 		$CompletionCodeModel->update([
 			'Name' => request('Name'),
 			'code_name' => request('code_name'),
@@ -73,18 +79,21 @@ class CompletionCodesController extends Controller
 			'CONSENT_OP' => request()->has('CONSENT_OP') ? true : NULL,
 			'NotShow' => request()->has('NotShow') ? true : NULL,
 			'IsNotFinal' => request()->has('IsNotFinal') ? true : NULL,
-			#'code_name_short' => request('code_name_short')
+			'code_name_short' => request('code_name_short'),
+			'call_algorithm' => request('call_algorithm')
 		]);
-
-		return redirect()->route('CompletionCodes', ['id' => $task->id]);
+		//dd($CompletionCodeModel);
+		return redirect()->route('CompletionCodes', [$task->id]);
 
 	}
 
 
 	public function create(Task $task)
-	{
+	{	
+		$callAlgorithms = DB::table('oktell.dbo.algorithm_call_status')->get();
 		return view('CompletionCodes.create',compact([
-			'task'
+			'task',
+			'callAlgorithms'
 		]));
 	}
 
@@ -94,7 +103,7 @@ class CompletionCodesController extends Controller
 			'Name' => 'required',
 			'code_name' => 'required',
 			'code_descript' => 'required',
-			#'code_name_short' => 'required'
+			'code_name_short' => 'required'
 		]);
 		$Result = CompletionCode::where('TaskId',$task->uuid)->max('Result')+1;
 		$data = CompletionCode::create([
@@ -110,10 +119,11 @@ class CompletionCodesController extends Controller
 			'NotShow' => request()->has('NotShow') ? true : NULL,
 			'IsNotFinal' => request()->has('IsNotFinal') ? true : NULL,
 			'TaskId' => $task->uuid,
-			#'code_name_short' => request('code_name_short')
+			'code_name_short' => request('code_name_short'),
+			'call_algorithm' => request('call_algorithm')
 
 		]);
 		
-		return redirect()->route('CompletionCodes', ['id' => $task->id]);
+		return redirect()->route('CompletionCodes', [$task->id]);
 	}
 }

@@ -135,4 +135,35 @@ class AlgorithmSettingsController extends Controller
 		return redirect()->back();
 	}
 
+	public function dublicateIndex(Task $Task)
+	{
+		$OktellTasks = Task::select('name','uuid')
+			->orderBy('name')
+			->get();
+
+		return view('admin.task.showDublicate',compact(['OktellTasks','Task']));
+	}
+	public function dublicateSend(Task $Task){
+		$this->validate(request(),[
+			'tables' => 'required',
+			'task_id' => 'required'
+		]);
+		$client = new \GuzzleHttp\Client();
+		$url = 'http://10.2.19.146:5001/task_preparation';
+
+		$options = [
+			'form_params' => [
+				'new_id' => $Task->uuid,
+				'old_id' => request('task_id'),
+				'tables' => request('tables')
+			]
+		]; 
+		
+		$response = $client->post($url, $options);
+		$answer = $response->getBody()->read(1024);
+		
+		return back()->withErrors($answer);
+		
+		
+	}
 }

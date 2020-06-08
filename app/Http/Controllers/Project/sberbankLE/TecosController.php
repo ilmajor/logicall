@@ -42,23 +42,35 @@ class TecosController extends Controller
     	$tecos = Tecos::where('uuid','=',$task->uuid)
     		->first();
         
-    	$baseSize = DB::connection('oktell')
+        $baseSize = DB::connection('oktell')
             ->table($tecos->task_table)
-    		->leftJoin($tecos->task_table_daily,$tecos->task_table_daily.'.id','=', $tecos->task_table.'.id')
-    		->selectRaw(
-    			$tecos->task_table.'.ID_CAMPAIGN 
-    			,cast('.$tecos->task_table.'.insertdatetime as date) as dte
-    			,count('.$tecos->task_table.'.id) as baseSize
-    			,count('.$tecos->task_table_daily.'.id) as baseSizeDaily'
-    		)
-    		->groupBy($tecos->task_table.'.ID_CAMPAIGN',$tecos->task_table.'.insertdatetime')
-    		->orderBy(DB::raw('cast('.$tecos->task_table.'.insertdatetime as date)'))
-    		->get();
-            
-		return view('project.sberbankLE.task',compact([
-			'baseSize',
-			'task',
-		]));
+            ->leftJoin(
+                 DB::raw("
+                    (select [ID_CAMPAIGN]
+                        ,[base_date]
+                        ,Isnull(min(Tm_legal_entity_base_stop_log.done),3) as done
+                    from [oktell].[dbo].Tm_legal_entity_base_stop_log
+                    group by [ID_CAMPAIGN],[base_date]) s
+            "), function ($join) use($tecos){
+                $join->on('s.ID_CAMPAIGN', '=', $tecos->task_table.'.ID_CAMPAIGN')
+                    ->on('s.base_date', '=', $tecos->task_table.'.insertdatetime');
+            })
+            ->leftJoin($tecos->task_table_daily,$tecos->task_table_daily.'.id','=', $tecos->task_table.'.id')
+            ->where(DB::raw('cast('.$tecos->task_table.'.insertdatetime as date)'),'>=', Carbon::now()->addMonth(-6)->format('Y-m-d'))
+            ->selectRaw(
+                $tecos->task_table.'.ID_CAMPAIGN 
+                ,cast('.$tecos->task_table.'.insertdatetime as date) as dte
+                ,count('.$tecos->task_table.'.id) as baseSize
+                ,count('.$tecos->task_table_daily.'.id) as baseSizeDaily
+                ,min(isnull(done,3)) as done'
+            )
+            ->groupBy($tecos->task_table.'.ID_CAMPAIGN',$tecos->task_table.'.insertdatetime')
+            ->orderBy(DB::raw('cast('.$tecos->task_table.'.insertdatetime as date)'), 'DESC')
+            ->get();
+    	return view('project.sberbankLE.task',compact([
+    		'baseSize',
+    		'task',
+    	]));
     }
 
     public function start(Task $task, $id_campaign, $date){

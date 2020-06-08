@@ -3,7 +3,6 @@
 namespace App\Models;
 
 
-
 class Profile extends Model
 {
 

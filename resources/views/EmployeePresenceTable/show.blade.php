@@ -1,9 +1,8 @@
 @extends ('layouts.master')
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  
-  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script> 
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" defer></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" defer></script> 
 
 @section('content')
 <h1>{{$user->FullName}}</h1> 
@@ -16,7 +15,6 @@
         <th>Отработанное время</th>
         <th>Состояние</th>
         <th>Комментарий</th>
-        <th>action</th>
       </tr>
      </thead>
     </table>
@@ -25,42 +23,41 @@
   </div>
 
 <div id="formModal" class="modal fade" role="dialog">
- <div class="modal-dialog">
-  <div class="modal-content">
-        <div class="modal-body">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
         <h4 class="modal-title"></h4>
-         <span id="form_result"></span>
-         <form method="post" id="sample_form" class="form-horizontal">
+        <span id="form_result"></span>
+        <form method="post" id="sample_form" class="form-horizontal">
           @csrf
           <div class="form-group">
             <label class="control-label" >Отработанное время: </label>
-            
-             <input type="text" name="work_time" id="work_time" class="form-control" />
-            
-           </div>
-            <div class="form-group">
-                <label for="condition">Статус: </label>
-                <select class="form-control form-control" id="condition" name="condition" aria-describedby="condition">
-                    @foreach($EmployeePresenceStatus as $condition)
-                            <option value="{{$condition->id}}">{{$condition->name}}</option>
-                    @endforeach
-                </select>
-            </div>
+            <input type="text" name="work_time" id="work_time" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="condition">Статус: </label>
+            <select class="form-control form-control" id="condition" name="condition" aria-describedby="condition">
+              @foreach($EmployeePresenceStatus as $condition)
+                <option value="{{$condition->id}}">{{$condition->name}}</option>
+              @endforeach
+            </select>
+          </div>
 
-                <div class="form-group">
-                    <label for="comment">Комментарий: </label>
-                    <textarea class="form-control" id="comment" rows="3" name="comment"></textarea>
-                </div>
-                <br />
-                <div class="form-group" align="center">
-                 <input type="hidden" name="action" id="action" value="Add" />
-                 <input type="hidden" name="hidden_id" id="hidden_id" />
-                 <input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add" />
-                </div>
-         </form>
-        </div>
-     </div>
+          <div class="form-group">
+            <label for="comment">Комментарий: </label>
+            <textarea class="form-control" id="comment" rows="3" name="comment"></textarea>
+          </div>
+          <br />
+          <div class="form-group" align="center">
+            <input type="hidden" name="action" id="action" value="Add" />
+            <input type="hidden" name="hidden_id" id="hidden_id" />
+            <input type="submit" name="action_button" id="action_button" class="btn btn-warning" value="Add" />
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
@@ -89,11 +86,7 @@ $(document).ready(function(){
     data: 'comment',
     name: 'comment'
    },
-   {
-    data: 'action',
-    name: 'action',
-    orderable: false
-   }
+
   ],
   "language": {
     "processing": "Подождите...",

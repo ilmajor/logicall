@@ -19,6 +19,18 @@
 				value="{{ $Task->task_abonent }}">
 			</div>
 			<div class="form-group">
+				<label for="status_call_table">Таблица записи кодов завершения:</label>
+				<input type="text" class="form-control" id="status_call_table" name="status_call_table" aria-describedby="status_call_table" 
+				value="{{ $Task->status_call_table }}">
+			</div>
+			<div class="form-group">
+				<label for="client_id">Поле таблицы для ID клиента:</label>
+				<input type="text" class="form-control" id="client_id" name="client_id" aria-describedby="client_id" 
+				value="{{ $Task->client_id }}">
+			</div>
+
+			
+			<div class="form-group">
 				<div class="form-check form-check-inline">
 					@if( $Task->is_new_algorithm == true )
 						<input class="form-check-input" type="checkbox" id="is_new_algorithm" name="is_new_algorithm" value="{{ $Task->id }}" checked>
@@ -55,7 +67,9 @@
 			</div>
 
 		</div>
-		<button type="submit" class="btn btn-primary">Сохранить</button>
+		<a href="/lk/admin/task/{{ $Task->id }}/dublicate" class="btn btn-warning float-right" role="button">Создать скрипты и таблицы для задачи</a>
+		<button type="submit" class="btn btn-primary float-left">Сохранить</button> 
+		
 	</form>	
 </div>
 @endsection

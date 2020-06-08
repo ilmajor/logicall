@@ -74,7 +74,7 @@ Breadcrumbs::for('CompletionCodes', function ($trail, $Task) {
 Breadcrumbs::for('CompletionCode', function ($trail, $Task, $CompletionCode) {
     
     $trail->parent('CompletionCodes',$Task);
-    $trail->push(App\Models\CompletionCode::getCompletionCode($Task->uuid,$CompletionCode)->Name);
+    $trail->push(App\Repositories\CompletionCodes::getCompletionCode($Task->uuid,$CompletionCode)->Name);
 
 });
 // Home > DatabaseExclusion > [DatabaseExclusion]
@@ -150,6 +150,18 @@ Breadcrumbs::for('user', function ($trail, $User) {
     $trail->push($User->name, route('user', $User->id));
 });
 
+
+// Home > DatabaseExclusion
+Breadcrumbs::for('searchChangeCompletionCode', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Поиск звонка', route('searchChangeCompletionCode'));
+});
+
+// Home > DatabaseExclusion > idchain
+Breadcrumbs::for('showChangeCompletionCode', function ($trail) {
+    $trail->parent('searchChangeCompletionCode');
+    $trail->push('Изменить код завершения', route('showChangeCompletionCode'));
+});
 
 /*// Home > Blog > [Category] > [Post]
 Breadcrumbs::for('post', function ($trail, $post) {

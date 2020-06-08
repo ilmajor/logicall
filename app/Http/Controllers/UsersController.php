@@ -62,7 +62,7 @@ class UsersController extends Controller
           ->where("IsDeleted",0)
           ->orderBy('users.name','asc')
           ->select("Users.*")
-          ->paginate(100);
+          ->get();
 
     $firedUsers = User::join('oktell_settings.dbo.A_Users', function ($join) {
             $join->on('users.id_user', '=', 'A_Users.id');
@@ -77,7 +77,7 @@ class UsersController extends Controller
           ->where("IsDeleted",1)
           ->orderBy('users.name','asc')
           ->select("Users.*")
-          ->paginate(100);
+          ->get();
 
 
     return view('users.index',compact('currentUsers','firedUsers'));

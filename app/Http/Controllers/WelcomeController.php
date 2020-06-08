@@ -7,6 +7,7 @@ Use App\Models\User;
 use DB;
 Use Illuminate\Support\Facades\Auth;
 
+
 class WelcomeController extends Controller
 {
 
@@ -15,8 +16,9 @@ class WelcomeController extends Controller
     #$this->middleware('auth');
   }
 
-	public function index(Request $request)
+	public function index()
 	{
+
 
 	}
 }

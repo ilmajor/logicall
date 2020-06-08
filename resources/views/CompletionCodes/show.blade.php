@@ -23,6 +23,7 @@
         <label for="code_name_short">Короткое название:</label>
         <input type="text" class="form-control" id="code_name_short" name="code_name_short" value="{{ $CompletionCode->code_name_short }}" required>
       </div>
+
       <fieldset class="form-group">
         <div class="row">
           <legend class="col-form-label col-sm-2 pt-0">Логика</legend>
@@ -58,7 +59,20 @@
             </div>
           </div>
         </fieldset>
-      @include('admin.layouts.errors')
+        <div class="form-group">
+          <label for="call_algorithm">Логика для обзвона:</label>
+          <select class="form-control form-control" id="call_algorithm" name="call_algorithm" aria-describedby="call_algorithm">
+
+            @foreach($callAlgorithms as $callAlgorithm)
+              @if((!empty($callAlgorithm)) && ((int) $callAlgorithm->Status == $CompletionCode->call_algorithm))
+                <option value="{{ $CompletionCode->call_algorithm }}" selected>{{$callAlgorithm->Name}}</option>
+              @else 
+                <option value="{{ $callAlgorithm->Status }}">{{ $callAlgorithm->Name }}</option>
+              @endif
+            @endforeach 
+          </select>
+        </div>
+      {{-- @include('admin.layouts.errors') --}}
 
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </form> 
