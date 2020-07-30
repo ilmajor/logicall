@@ -24,10 +24,6 @@ class ChangeCompletionCodeController extends Controller
 	public function show()
 	{ 
 
-		//$this->authorize('access', $task->project);
-/*		if ($task->is_outbound != true) {
-			return redirect()->route('algorithmSettings');
-		}*/
 
 		$this->validate(request(),[
 			'idchain' => 'required'
@@ -43,13 +39,13 @@ class ChangeCompletionCodeController extends Controller
 
 		$task = $data->first();
 		
-		$task->task_table = Str::replaceLast('_daily', '', $task->task_table);
+/*		$this->authorize('access', $task->project);
 
-
-/*		if(Schema::hasColumn($task->status_call_table, 'TaskId'))
-		{
-			$join->on('Results.TaskId','=',$task->status_call_table.'.TaskId');
+		if ($task->is_outbound != true) {
+			return redirect()->route('searchChangeCompletionCode');
 		}*/
+
+		$task->task_table = Str::replaceLast('_daily', '', $task->task_table);
 
 		$ClientCalls = DB::table('oktell_cc_temp.dbo.A_Cube_CC_EffortConnections')
 			->leftJoin($task->status_call_table,'A_Cube_CC_EffortConnections.idchain','=',$task->status_call_table.'.idchain')
@@ -114,39 +110,41 @@ class ChangeCompletionCodeController extends Controller
 			->whereNull('Results.IsNotFinal')
 			->get();
 
-			$task_abonent = DB::connection('oktell')
-				->table($dataCall->task_abonent);
-			$task_phone = DB::connection('oktell')
-				->table($dataCall->task_phone);
+		$task_abonent_data = DB::connection('oktell')
+			->table($dataCall->task_abonent);
+		$task_phone_data = DB::connection('oktell')
+			->table($dataCall->task_phone);
 
-			if($dataCall->is_taskid == 1)
-			{
-				$task_abonent = $task_abonent->where('TaskId',$dataCall->IdTask)
-					->where('id_abonent',$dataCall->IdInList)
-					->first();
+		if($dataCall->is_taskid == 1)
+		{
+			$task_abonent_data = $task_abonent_data->where('TaskId',$dataCall->IdTask)
+				->where('id_abonent',$dataCall->IdInList);
+				//->first();
 
-				$task_phone = $task_phone->where('TaskId',$dataCall->IdTask)
-					->where('id_abonent',$dataCall->IdInList)
-					->whereNull('bad_num')
-					->first();
-			}
-			else
-			{
-				$task_abonent->where('id_abonent',$dataCall->IdInList)
-					->first();
+			$task_phone_data = $task_phone_data->where('TaskId',$dataCall->IdTask)
+				->where('id_abonent',$dataCall->IdInList)
+				->whereNull('bad_num');
+				//->first();
+		}
+		else
+		{
+			$task_abonent_data->where('id_abonent',$dataCall->IdInList);
+				//->first();
 
-				$task_phone->where('id_abonent',$dataCall->IdInList)
-					->whereNull('bad_num')
-					->first();
-			}
-		//dd($task_phone);
-
+			$task_phone_data->where('id_abonent',$dataCall->IdInList)
+				->whereNull('bad_num');
+				//->first();
+		}
+		$task_phone = $task_phone_data->first();
+		$task_abonent = $task_abonent_data->first();
+		
 		if($checkCalls->isEmpty())
 		{
 			$data = DB::table($dataCall->status_call_table)
 				->where('IdChain',$idchain)
 				->first();
-
+			$Results = CompletionCodes::getCompletionCode($data->TaskId,request('Result'));
+			
 			$backUp = DB::connection('oktell')
 				->table('oktell.dbo.StatusCallFinish_change_status')->insert([
 					'Id' => $data->Id,
@@ -165,7 +163,7 @@ class ChangeCompletionCodeController extends Controller
 					->where('IdChain',$idchain)
 					->update(['result' => request('Result')]);
 			}
-			//нужно сделать проверку на существовнаие значения в основной таблице
+			
 			$CustomTable = DB::connection('oktell')
 				->table('oktell.dbo.statuscallfinish')
 				->where('IdChain',$idchain)
@@ -178,6 +176,41 @@ class ChangeCompletionCodeController extends Controller
 					->where('IdChain',$idchain)
 					->update(['result' => request('Result')]);
 			}
+		
+		
+			if($Results->call_algorithm == 1 )
+			{
+				$status = 10;
+				//dd($status);
+			}
+			if($Results->call_algorithm == 2 )
+			{
+				$status = 20;
+				//dd($status);
+			}
+			if($Results->call_algorithm == 3 )
+			{
+				$status = 40;
+				//dd($status);
+			}
+			if($Results->call_algorithm == 4 )
+			{
+				$status = 40;
+				//dd($status);
+			}
+			if($Results->call_algorithm == 5 )
+			{
+				$status = 50;
+				//dd($status);
+			}
+			if($Results->call_algorithm == 6 )
+			{
+				$status = 50;
+				//dd($status);
+			}
+
+			$task_phone_data->update(['status' => $status]);
+			$task_abonent_data->update(['status' => $status]);
 		}
 		
 		return redirect()->route('searchChangeCompletionCode');

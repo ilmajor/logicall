@@ -31,7 +31,7 @@ class EmployeePresenceTableController extends Controller
 				$join->on('users.id_user', '=', 'A_Users.id');
 			})
 			->LeftJoin('employee_presence_table', function ($join) {
-				$join->on('employee_presence_table.user_id', '=', 'users.id');
+				$join->on('employee_presence_table.user_id', '=', 'users.id'); 
 			})
 			->with('profiles')
 

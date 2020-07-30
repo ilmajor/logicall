@@ -16,7 +16,7 @@
                 @foreach($OktellTasks as $task)
                     <option value="{{$task->Id}}">{{$task->Name}}</option>
                 @endforeach
-            </select>
+            </select> 
         </div>
 
 		<div class="form-group">
@@ -46,6 +46,14 @@
 				<input class="form-check-input" type="checkbox" id="is_taskid" name="is_taskid" value="true">
 				<label class="form-check-label" for="inlineCheckbox1">Есть линк по Id Task</label>
 			</div>
+		</div>
+		<div class="form-group">
+			<label for="status_call_table">Таблица записи кодов завершения:</label>
+			<input type="text" class="form-control" id="status_call_table" name="status_call_table" aria-describedby="status_call_table">
+		</div>
+		<div class="form-group">
+			<label for="client_id">Поле таблицы для ID клиента:</label>
+			<input type="text" class="form-control" id="client_id" name="client_id" aria-describedby="client_id">
 		</div>
 
 		<hr>
@@ -81,6 +89,14 @@
 		<div class="form-group">
 			<label for="count_calls">Количество звонков на клиента:</label>
 			<input type="text" class="form-control" id="count_calls" name="count_calls">
+		</div>
+		<div class="form-group">
+			<label for="min_client_time_calls">Начало допустимого интервала звонка:</label>
+			<input type="text" class="form-control" id="min_client_time_calls" name="min_client_time_calls" aria-describedby="min_client_time_calls">
+		</div>
+		<div class="form-group">
+			<label for="max_client_time_calls">Конец допустимого интервала звонка:</label>
+			<input type="text" class="form-control" id="max_client_time_calls" name="max_client_time_calls" aria-describedby="max_client_time_calls">
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Создать</button>

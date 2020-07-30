@@ -24,6 +24,7 @@
 				<option value="line">line</option>
 				<option value="pie">pie</option>
 				<option value="column">column</option>
+				<option value="table">table</option>
 			</select>
 		</div>
 

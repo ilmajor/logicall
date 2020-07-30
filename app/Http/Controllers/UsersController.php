@@ -95,6 +95,7 @@ class UsersController extends Controller
       'Name' => 'required|min:3',
       'middleName' => 'required|min:3'
     ]);
+
     $Surname = trim(request('Surname'));
     $Name = trim(request('Name'));
     $middleName = trim(request('middleName'));
@@ -106,6 +107,14 @@ class UsersController extends Controller
     $password = !empty($password) ? $password : $login;
     $password = mb_strtoupper(md5(mb_convert_encoding($password,'cp1251')));
     #dd($password);
+            
+    if(DB::table('oktell_settings.dbo.A_Users')->where('Login',$login)->exists())
+    {
+      return back()->withErrors([
+        'massage' => "Логин $login уже есть Oktell."
+      ]);
+    }
+
     $user = User::create([
       'name' => $fio,
       'login' => $login,
@@ -134,7 +143,7 @@ class UsersController extends Controller
       'password' => $password
     ]);
 
-    return redirect()->route('user', ['id' => $user->id]);
+    return redirect()->route('user', [$user->id]);
   }
 
 public function show(Users $users, User $user)

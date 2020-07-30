@@ -11,6 +11,8 @@ use App\Models\Project;
 use App\Models\User;
 use App\Charts\PieChart;
 use DB;
+use Illuminate\Support\Facades\Schema;
+use DataTables;
 
 class CustomerDashboardController extends Controller
 {
@@ -96,6 +98,14 @@ class CustomerDashboardController extends Controller
 			$chart->dataset($CustomerDashboard->name, $CustomerDashboard->charts, $chartsValues);
 			return $chart->api();
 		}
+		if($CustomerDashboard->charts == 'table' )
+		{
+				if (request()->ajax()) {
+
+					$query = DB::select($CustomerDashboard->query);
+					return Datatables($query)->make(true);
+				}
+		}
 	}
 
 	public function show()
@@ -111,6 +121,11 @@ class CustomerDashboardController extends Controller
 			$data = DB::select($dashboard->query);
 			$attributes = collect();
 			$api = url('/CustomerDashboard/'.$dashboard->id);
+
+			$timeouts[$dashboard->id] = $dashboard->timeout;
+			$types[$dashboard->id] = $dashboard->charts;
+			$dashboardsName[$dashboard->id] = $dashboard->name;
+
 			if($dashboard->charts == 'pie')
 			{
 				foreach($data as $records)
@@ -122,7 +137,7 @@ class CustomerDashboardController extends Controller
 				}
 				$charts[$dashboard->id] = new PieChart;
 				$charts[$dashboard->id]->labels($attributes->keys())->load($api);
-				$timeouts[$dashboard->id] = $dashboard->timeout;
+
 			}
 			if($dashboard->charts == 'line')
 			{
@@ -150,7 +165,7 @@ class CustomerDashboardController extends Controller
 
 				$charts[$dashboard->id]->label($columnName);
 				$charts[$dashboard->id]->labels($chartsLabels)->load($api);
-				$timeouts[$dashboard->id] = $dashboard->timeout;
+
 			}
 			if($dashboard->charts == 'column')
 			{
@@ -189,7 +204,23 @@ class CustomerDashboardController extends Controller
 				]);
 				$charts[$dashboard->id]->label($columnName);
 				$charts[$dashboard->id]->labels($chartsLabels)->load($api);
-				$timeouts[$dashboard->id] = $dashboard->timeout;
+			}
+			if($dashboard->charts == 'table')
+			{
+
+				if(!Empty($data[0]))
+				{	
+					$i = 0;
+					foreach($data[0] as $key => $value)
+					{
+						
+						$tableColumnName[$dashboard->id][$i] = $key; 
+						
+						$i++;
+
+					}
+				}
+
 			}
 
 		}
@@ -197,7 +228,10 @@ class CustomerDashboardController extends Controller
 		return view('customerDashboard.index',compact([
 			'charts',
 			'timeouts',
-			'project'
+			'project',
+			'types',
+			'tableColumnName',
+			'dashboardsName'
 		]));
 	}
 }
