@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,8 +20,8 @@ class CityController extends Controller
 	public function index()
 	{
 		$city = City::orderBy('name')->get();
-
-		return view('admin.city.index',compact([
+		
+		return view('city.index',compact([
 			'city'
 		]));
 	} 
@@ -29,7 +29,7 @@ class CityController extends Controller
 	public function show(City $city, Users $users)
 	{
 		$managers = $users::getUserByRole(['manager']);
-		return view('admin.city.show',compact(
+		return view('city.show',compact(
 			'city',
 			'managers'
 		));
@@ -50,7 +50,7 @@ class CityController extends Controller
 		->orderBy('users.name','asc')
 		->get();
 
-		return view('admin.city.create',compact([
+		return view('city.create',compact([
 			'managers'
 		]));
 	}

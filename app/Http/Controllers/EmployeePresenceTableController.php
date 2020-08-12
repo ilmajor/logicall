@@ -23,7 +23,7 @@ class EmployeePresenceTableController extends Controller
 	}
 	public function index()
 	{
-		$user = Auth::user();
+		$user = Auth::user(); 
 		$data = Role::UsersMaxWeight(Auth::id());
 		$projects = $user->projects;
 

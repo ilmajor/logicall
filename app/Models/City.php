@@ -8,7 +8,9 @@ class City extends Model
         'director',
         'name',
         'address',
-        'uuid'
+        'uuid',
+        'CCTV',
+        'security_phone_numbers'
     ];
 
 	public function user(){

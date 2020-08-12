@@ -12,7 +12,7 @@ use App\Models\User;
 
 class CompletionCodesController extends Controller
 {
-	public function tasks() 
+	public function tasks()  
 	{
 		$tasks = Task::availableOutbound(Auth::id());
 		$tasks = $tasks->sortBy('project.name')->sortBy('name');

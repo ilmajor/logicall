@@ -92,6 +92,15 @@ Route::middleware(['auth'])->group(function () {
 		#Route::post('/EmployeePresence/{task}','DatabaseExclusionController@exclusion');
 		#Route::post('/EmployeePresence/{task}','DatabaseExclusionController@inclusion');
 
+
+		Route::get('/city','CityController@index')->name('citys');
+		Route::get('/city/{city}','CityController@show')->name('city');
+		Route::post('/city/{city}','CityController@update')->name('cityUpdate');
+		/*project manager*/
+		Route::get('/ProjectManager','ProjectManagerController@index')->name('ProjectManager');
+		Route::get('/ProjectManager/Dashboard/{project}','ProjectManagerController@show')
+			->name('ProjectManagerDashboard');
+
 	});	
 	Route::middleware(['AuthAdmin'])->group(function () {
 

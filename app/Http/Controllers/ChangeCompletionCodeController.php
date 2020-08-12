@@ -16,6 +16,8 @@ use App\Repositories\CompletionCodes;
 
 class ChangeCompletionCodeController extends Controller
 {
+	private $task_table = 'logicall_dev.dbo.Tasks';
+
 	public function index()
 	{
 		return view('ChangeCompletionCode.index');
@@ -24,7 +26,6 @@ class ChangeCompletionCodeController extends Controller
 	public function show()
 	{ 
 
-
 		$this->validate(request(),[
 			'idchain' => 'required'
 		]);
@@ -32,7 +33,7 @@ class ChangeCompletionCodeController extends Controller
 		$idchain = request('idchain');
 
 		$data = DB::table('oktell_cc_temp.dbo.A_Cube_CC_EffortConnections')
-			->leftJoin('logicall_dev.dbo.Tasks','Tasks.uuid','=','A_Cube_CC_EffortConnections.IdTask')
+			->leftJoin($this->task_table,'Tasks.uuid','=','A_Cube_CC_EffortConnections.IdTask')
 			->where('A_Cube_CC_EffortConnections.Idchain',$idchain)
 			->where('A_Cube_CC_EffortConnections.idchain','!=','00000000-0000-0000-0000-000000000000')
 			->where('CallResult','!=','15');
@@ -46,6 +47,7 @@ class ChangeCompletionCodeController extends Controller
 		}*/
 
 		$task->task_table = Str::replaceLast('_daily', '', $task->task_table);
+		$task->task_table = Str::replaceLast('_certus', '', $task->task_table);
 
 		$ClientCalls = DB::table('oktell_cc_temp.dbo.A_Cube_CC_EffortConnections')
 			->leftJoin($task->status_call_table,'A_Cube_CC_EffortConnections.idchain','=',$task->status_call_table.'.idchain')
@@ -57,18 +59,70 @@ class ChangeCompletionCodeController extends Controller
 			->where('A_Cube_CC_EffortConnections.idinlist',$task->IdInList)
 			->where('A_Cube_CC_EffortConnections.idchain','!=','00000000-0000-0000-0000-000000000000')
 			->where('CallResult','!=','15')
+			->where('A_Cube_CC_EffortConnections.idtask',$task->IdTask)
 			->whereNotNull($task->status_call_table.'.result')
 			->selectRaw('cast(DateStart as date) as DateStart,cast(TimeStart as time) as TimeStart,Results.Name,A_Cube_CC_EffortConnections.idchain')
 			->groupBy('A_Cube_CC_EffortConnections.idchain','DateStart','TimeStart','Results.Name')
+			->orderBy('DateStart')
+			->orderBy('TimeStart')
 			->get();
 
 		$CallData = $data->leftJoin($task->status_call_table,'A_Cube_CC_EffortConnections.idchain','=',$task->status_call_table.'.idchain')
-			->leftJoin($task->task_table,$task->task_table.'.id','=','A_Cube_CC_EffortConnections.idinlist')
-			->selectRaw(
-				'A_Cube_CC_EffortConnections.idchain,Tasks.name,idoperator,cast(DateStart as date) as DateStart,cast(TimeStart as time) as TimeStart,'.$task->task_table .'.'.$task->client_id .' as id_client,CallResult,CallResultInfo,sum(LenTime) as LenTime,'.$task->status_call_table.'.Result'
-			)
-			->groupBy('A_Cube_CC_EffortConnections.idchain','Tasks.name','idoperator','DateStart','TimeStart',$task->task_table .'.'.$task->client_id,'CallResult','CallResultInfo',$task->status_call_table.'.Result')
-			->first();
+			->leftJoin($task->task_table,$task->task_table.'.id','=','A_Cube_CC_EffortConnections.idinlist');
+			if (!empty($task->client_id))
+			{
+				$CallData = $CallData->selectRaw(
+						'A_Cube_CC_EffortConnections.idchain
+						,Tasks.name
+						,idoperator
+						,cast(DateStart as date) as DateStart
+						,cast(TimeStart as time) as TimeStart
+						,'.$task->task_table .'.'.$task->client_id .' as id_client
+						,CallResult
+						,CallResultInfo
+						,sum(LenTime) as LenTime
+						,'.$task->status_call_table.'.Result'
+					)
+					->groupBy(
+						'A_Cube_CC_EffortConnections.idchain'
+						,'Tasks.name'
+						,'idoperator'
+						,'DateStart'
+						,'TimeStart'
+						,$task->task_table .'.'.$task->client_id
+						,'CallResult'
+						,'CallResultInfo'
+						,$task->status_call_table.'.Result'
+					);
+			}
+			else
+			{
+				$CallData = $CallData->selectRaw(
+						'A_Cube_CC_EffortConnections.idchain
+						,Tasks.name
+						,idoperator
+						,cast(DateStart as date) as DateStart
+						,cast(TimeStart as time) as TimeStart
+						,null as id_client
+						,CallResult
+						,CallResultInfo
+						,sum(LenTime) as LenTime
+						,'.$task->status_call_table.'.Result'
+					)
+					->groupBy(
+						'A_Cube_CC_EffortConnections.idchain'
+						,'Tasks.name'
+						,'idoperator'
+						,'DateStart'
+						,'TimeStart'
+						
+						,'CallResult'
+						,'CallResultInfo'
+						,$task->status_call_table.'.Result'
+					);
+			}
+
+		$CallData = $CallData->first();
 
 		$Results = CompletionCodes::getTaskCompletionCode($task->uuid);
 
@@ -89,7 +143,7 @@ class ChangeCompletionCodeController extends Controller
 		$idchain = request('idchain');
 
 		$dataCall = DB::table('oktell_cc_temp.dbo.A_Cube_CC_EffortConnections')
-			->leftJoin('logicall_dev.dbo.Tasks','Tasks.uuid','=','A_Cube_CC_EffortConnections.IdTask')
+			->leftJoin($this->task_table,'Tasks.uuid','=','A_Cube_CC_EffortConnections.IdTask')
 			->where('A_Cube_CC_EffortConnections.Idchain',$idchain)
 			->first();
 

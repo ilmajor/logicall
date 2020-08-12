@@ -163,6 +163,31 @@ Breadcrumbs::for('showChangeCompletionCode', function ($trail) {
     $trail->push('Изменить код завершения', route('showChangeCompletionCode'));
 });
 
+// Home > userCreate
+Breadcrumbs::for('citys', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Площадки', route('citys'));
+});
+
+// Home > userStore
+Breadcrumbs::for('city', function ($trail,$city) {
+    $trail->parent('citys');
+    $trail->push($city->name, route('city',$city->id ));
+});
+
+// Home > userCreate
+Breadcrumbs::for('ProjectManager', function ($trail) {
+    $trail->parent('home');
+    $trail->push('РП '.Auth::user()->name, route('ProjectManager'));
+});
+// Home > userCreate
+Breadcrumbs::for('ProjectManagerDashboard', function ($trail,$project) {
+
+    $trail->parent('ProjectManager');
+    $trail->push($project->name, route('ProjectManagerDashboard',$project->id));
+});
+
+
 /*// Home > Blog > [Category] > [Post]
 Breadcrumbs::for('post', function ($trail, $post) {
     $trail->parent('category', $post->category);
