@@ -3,13 +3,16 @@
 namespace App\Models\project\sberbankLE;
 
 //use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\Models\Model;
 use App\Models\Task;
 use App\Models\Project;
 
 class Tecos extends Model
 {
-	protected $table = 'Tecos';
+	use Notifiable;
+
+    protected $table = 'Tecos';
 
 
 	//public function 
@@ -18,7 +21,8 @@ class Tecos extends Model
     {
     	return $this->hasOne(Task::class,'uuid','uuid');
     }
-/*    public function project()
+/*    
+    public function project()
     {
     	$tecos = Tecos::with('task.project')->get();
     	foreach($tecos as tasks){

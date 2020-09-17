@@ -20,10 +20,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/statistics','StatisticsController@send');*/
 	Route::get('/user','UsersController@showOwnerData')->name('userId');
 	Route::get('/','SectionsController@index')->name('home');
+	Route::get('users/export/', 'UsersController@export');
 	//Route::get('/test','WelcomeController@index')->name('test');
 
 	Route::middleware(['AuthEmployee'])->group(function () {
-		
 		Route::get('/statistics','StatisticsController@show')->name('statistics');
 		Route::post('/statistics','StatisticsController@send');
 	});
@@ -33,7 +33,13 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/project/sberbankIndividuals','Project\SberbankIndividualsController@index')
 			->name('projectSberbankIndividuals');
 		Route::post('/project/sberbankIndividuals','Project\SberbankIndividualsController@store');
-	});	
+	});
+
+	Route::middleware(['OktellProject:23'])->group(function () {
+		Route::get('/project/alfabankUrl','Project\alfabank\UrlController@index')
+			->name('alfabankUrl');
+		Route::post('/project/alfabankUrl/{URL}','Project\alfabank\UrlController@store');
+	});
 
 	Route::middleware(['AuthCustomer'])->group(function () {
 		Route::get('/CustomerDashboard','CustomerDashboardController@show')

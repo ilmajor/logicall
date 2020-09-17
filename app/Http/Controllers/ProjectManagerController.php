@@ -33,6 +33,13 @@ class ProjectManagerController extends Controller
 	{
 
 		$CustomerDashboards = CustomerDashboard::where('project_id',$project->id)->get();
+		
+		if ($CustomerDashboards->isEmpty())
+		{
+			return redirect()->route('ProjectManager');
+		}
+
+
 		//$project = Project::find($CustomerDashboards->pluck('project_id'))->pluck('name');
 		foreach($CustomerDashboards as $dashboard)
 		{

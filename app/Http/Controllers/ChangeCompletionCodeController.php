@@ -16,7 +16,7 @@ use App\Repositories\CompletionCodes;
 
 class ChangeCompletionCodeController extends Controller
 {
-	private $task_table = 'logicall_dev.dbo.Tasks';
+	private $task_table = 'logicall.dbo.Tasks';
 
 	public function index()
 	{
@@ -158,6 +158,7 @@ class ChangeCompletionCodeController extends Controller
 			})
 			->where('A_Cube_CC_EffortConnections.idinlist',$dataCall->IdInList)
 			->where('A_Cube_CC_EffortConnections.idchain','!=','00000000-0000-0000-0000-000000000000')
+			->where('A_Cube_CC_EffortConnections.idtask',$dataCall->IdTask)
 			->where('CallResult','!=','15')
 			->whereNotNull($dataCall->status_call_table.'.result')
 			->where('A_Cube_CC_EffortConnections.idchain','!=',$idchain)
@@ -197,6 +198,7 @@ class ChangeCompletionCodeController extends Controller
 			$data = DB::table($dataCall->status_call_table)
 				->where('IdChain',$idchain)
 				->first();
+			
 			$Results = CompletionCodes::getCompletionCode($data->TaskId,request('Result'));
 			
 			$backUp = DB::connection('oktell')

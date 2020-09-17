@@ -62,7 +62,9 @@
         <div class="form-group">
           <label for="call_algorithm">Логика для обзвона:</label>
           <select class="form-control form-control" id="call_algorithm" name="call_algorithm" aria-describedby="call_algorithm">
-
+            @if(empty($CompletionCode->call_algorithm))
+              <option></option>
+            @endif
             @foreach($callAlgorithms as $callAlgorithm)
               @if((!empty($callAlgorithm)) && ((int) $callAlgorithm->Status == $CompletionCode->call_algorithm))
                 <option value="{{ $CompletionCode->call_algorithm }}" selected>{{$callAlgorithm->Name}}</option>

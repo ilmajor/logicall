@@ -165,7 +165,8 @@ return [
         //MaterializeCSS
         //Skydiver\LaravelMaterializeCSS\MaterializeCSSServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        
+        NotificationChannels\Telegram\TelegramServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -218,6 +219,7 @@ return [
         //MaterializeCSS
         //'MaterializeCSS' => Skydiver\LaravelMaterializeCSS\MaterializeCSS::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

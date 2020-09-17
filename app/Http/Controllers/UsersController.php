@@ -12,11 +12,13 @@ Use App\Models\User;
 use App\Repositories\Users;
 use App\Models\Role;
 use App\Models\Profile;
+use App\Models\CustomerDashboard;
 use App\Models\Project;
 use App\Models\OktellUserControl;
 use App\Models\City;
 use App\Models\ContractingOrganization;
 use App\Models\OktellPlugin;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 #use App\Http\Controllers\Controller;
 
@@ -318,5 +320,11 @@ public function show(Users $users, User $user)
     }
     return redirect()->back();
   }
+  public function export() 
+  {
+    $query = CustomerDashboard::find(10);
+    $data = DB::select($query->query);
+    return (new FastExcel($data))->download(time().'.xlsx');
+  } 
 
 }

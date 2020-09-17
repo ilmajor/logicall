@@ -32,6 +32,12 @@ Breadcrumbs::for('projectSberbankIndividuals', function ($trail) {
     $trail->push('Претензии по Follow-Up', route('projectSberbankIndividuals'));
 });
 
+// Home > projectalfabankUrl
+Breadcrumbs::for('alfabankUrl', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Претензии по Follow-Up', route('alfabankUrl'));
+});
+
 // Home > DatabaseExclusion
 Breadcrumbs::for('DatabaseExclusions', function ($trail) {
     $trail->parent('home');
